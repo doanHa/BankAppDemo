@@ -79,6 +79,10 @@ public class Bank {
 		//TODO use usernameInput and passwordInput to validate customer login
 		//TODO if the inputs is valid, then display the menu for available actions
 	}
+	
+	private static void showCustomerActionMenu() {
+		
+	}
 	private static String getInput() {
 		return scan.nextLine();
 	}
