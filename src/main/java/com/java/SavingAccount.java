@@ -1,12 +1,17 @@
 package com.java;
 
 public class SavingAccount extends Account{
+	
 	double annualInterestRate;
-	void incurInterest() {
+	void incurInterest(int accountID) {
+		//TODO check accountID for validation
+		//TODO getAnnualInterestRate from the database
 		balances *= (1+annualInterestRate);
+		//TODO update balances in the database
 	}
-	@Override
-	void setLimit() {
-		accountLimit = 100000000000.0;	
+	
+	public static double getLimit() {
+		return 10000000000000.0;
+		//TODO replace the above line with getting accountLimit from the database.
 	}
 }
