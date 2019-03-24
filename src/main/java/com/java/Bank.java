@@ -4,8 +4,6 @@ import java.util.Scanner;
 
 public class Bank {
 	static Scanner scan;
-	Customer[] customerDatabase;
-	Account[] accountDatabase;
 
 	public static void main(String[] args) {
 		showMainMenu();
@@ -26,7 +24,7 @@ public class Bank {
 		scan = new Scanner(System.in);
 		boolean a = true;
 		do {
-			String input = scan.nextLine();
+			String input = getInput();
 			switch (input) {
 			case "1": customerLogin();
 				a = false; break;
@@ -43,54 +41,46 @@ public class Bank {
 	}
 
 	private static void employeeLogin() {
-		// TODO Auto-generated method stub1
-		
 		System.out.println("Welcome to work! Please log in");
 		System.out.println("Please enter your username: ");
-		String usernameInput = scan.nextLine();
+		String usernameInput = getInput();
 		System.out.println("Please enter your password: ");
-		String passwordInput = scan.nextLine();
-//		System.out.println("Please enter your employee id: ");
-//		int idInput = Integer.valueOf(scan.nextLine());
+		String passwordInput = getInput();
+		//TODO use usernameInput and passwordInput to check for validation
+		//TODO then show them the menu of what they can do
+
 	}
 
 	private static void customerRegister() {
-		// TODO Auto-generated method stub
 		System.out.println("Welcome Valued Customer");
 		System.out.println("<---------------------------------------->");
 		System.out.println("Please enter your first name: ");
-		String firstNameInput = scan.nextLine();
+		String firstNameInput = getInput();
 		System.out.println("Please enter your last name: ");
-		String lastNameInput = scan.nextLine();
+		String lastNameInput = getInput();
 		System.out.println("Please enter your username: ");
-		String usernameInput = scan.nextLine();
+		String usernameInput = getInput();
 		System.out.println("Please enter your password: ");
-		String passwordInput = scan.nextLine();
-		int ssnInput = -1;
-		System.out.println("Please enter your ssn");
-		do {
-			try {
-				System.out.println("Please enter your password: ");
-				ssnInput = Integer.parseInt(scan.nextLine());
-				break;
-			}catch(NumberFormatException numFormatEx) {
-				System.out.println("Please enter a valid ssn");
-			}
-		}while(true);
+		String passwordInput = getInput();
+		System.out.println("Please enter your email address");
+		String emailInput = getInput();
 		System.out.println("Please wait for your account to be registered");
-//		Customer temp = new Customer();
-//		temp.register(firstNameInput, lastNameInput, usernameInput, passwordInput, ssnInput);
-//		temp = null;
-//		System.out.println("Your account has finished register");
+		//TODO insert an account into the table with above information.
+		//TODO then, display a message saying their account has been registered
+		//TODO afterward, take them to the main menu and ask for input
 	}
 
 	private static void customerLogin() {
-		// TODO Auto-generated method stub
 		System.out.println("Please enter your username: ");
-		String usernameInput = scan.nextLine();
+		String usernameInput = getInput();
 		System.out.println("Please enter your password: ");
-		String passwordInput = scan.nextLine();
+		String passwordInput = getInput();
 		System.out.println("Please wait");
+		//TODO use usernameInput and passwordInput to validate customer login
+		//TODO if the inputs is valid, then display the menu for available actions
+	}
+	private static String getInput() {
+		return scan.nextLine();
 	}
 	/*
 	 * static Logger logger= Logger.getLogger(Demo1.class);
