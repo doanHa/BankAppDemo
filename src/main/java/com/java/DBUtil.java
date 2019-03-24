@@ -24,24 +24,24 @@ public class DBUtil {
             System.out.println("File not found");
         }
     }
-
-
-    public static void main(String[] args) {
-        Connection con = null;
-        try {
-            con = connectionPool.getConnection();
-            PreparedStatement st = con.prepareStatement("select * from Customer");
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                System.out.println(rs.getInt(1));
-
-            }
-            con.close();
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-
-    }
-
 }
+
+//    public static void main(String[] args) {
+//        Connection con = null;
+//        try {
+//            con = connectionPool.getConnection();
+//            PreparedStatement st = con.prepareStatement("select * from Customer");
+//            ResultSet rs = st.executeQuery();
+//            while (rs.next()) {
+//                System.out.println(rs.getInt(1));
+//
+//            }
+//            con.close();
+//
+//        } catch (SQLException e) {
+//            System.out.println(e);
+//        }
+//
+//    }
+//
+//}
