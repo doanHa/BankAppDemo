@@ -33,7 +33,7 @@ public class DBUtil {
             PreparedStatement st = con.prepareStatement("select * from Customer");
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                System.out.println(rs.getInt(1) + " " + rs.getInt(2) + " " + rs.getInt(3) + " " + rs.getInt(4) + " " + rs.getInt(5) + " " + rs.getInt(6) + " " + rs.getInt(7));
+                System.out.println(rs.getInt(1));
 
             }
             con.close();
