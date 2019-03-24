@@ -24,6 +24,20 @@ public class DBUtil {
             System.out.println("File not found");
         }
     }
+
+
+
+    public static Connection getInstance() {
+
+        try {
+            return connectionPool.getConnection();
+        } catch (SQLException e) {
+            System.out.println("Unable to connect, please try again later");
+            //HACK: add exception to log file
+        }
+        // Review null value
+        return null;
+    }
 }
 
 //    public static void main(String[] args) {
