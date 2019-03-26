@@ -145,7 +145,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
 	@Override
 	public boolean insertCustomer(Customer customer) {
-
+		boolean entryAdded = false;
 		try {
 			PreparedStatement stmt = con.prepareStatement("INSERT INTO Customer (last_name, first_name, "
 					+ "email, login, password_text) values (?, ?, ?, ?, ?)");
@@ -160,7 +160,7 @@ public class CustomerDaoImpl implements CustomerDao {
 			con.commit();
 
 			if (rowsAdded == 1) {
-				return true;
+				entryAdded = true;
 			}
 
 		} catch (SQLException e) {
@@ -173,7 +173,7 @@ public class CustomerDaoImpl implements CustomerDao {
 					/* ignored */}
 		}
 
-		return false;
+		return entryAdded;
 	}
 
 	private Customer extractCustomerFromResultSet(ResultSet rs) throws SQLException {
