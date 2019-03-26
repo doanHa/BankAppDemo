@@ -9,20 +9,20 @@ public class Customer extends User{
 
 
 	Customer(String lastname, String firstname, String userEmail, String login, String password) {
-		this.lastName = lastname;
-		this.firstName = firstname;
-		this.userEmail = userEmail;
-		this.login = login;
-		this.password = password;
+		setFirstName(firstname);
+		setLastName(lastname);
+		setlogin(login);
+		setPassword(password);
+		setUserEmail(userEmail);
 	}
 
 	public Customer register(String firstNameInput, String lastNameInput, String loginInput, String passwordInput,
 						 String email) {
-		firstName = firstNameInput;
-		lastName = lastNameInput;
-		login = loginInput;
-		password = passwordInput;
-		userEmail = email;
+		setFirstName(firstNameInput);
+		setLastName(lastNameInput);
+		setlogin(loginInput);
+		setPassword(passwordInput);
+		setUserEmail(email);
 		return this;
 		//TODO implement register new customer to database
 		// implement check if customer is already in the database

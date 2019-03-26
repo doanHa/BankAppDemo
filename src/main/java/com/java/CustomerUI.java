@@ -35,10 +35,11 @@ public class CustomerUI extends UserUI {
 		Customer temp = new Customer();
 		temp = temp.register(firstNameInput, lastNameInput, usernameInput, passwordInput, emailInput);
 		if (customerConnection.insertCustomer(temp)) {
-			System.out.println("1.Inserted");
+			System.out.println("Your account has been registered.\nYou can log into your account by using you username and password.");
 		} else {
-			System.out.println("2.!Inserted");
+			System.out.println("Your account could not be registered at this time, please try again later");
 		}
+		// TODO add to log file
 		UserUI.showMainMenu();
 	}
 
@@ -53,9 +54,10 @@ public class CustomerUI extends UserUI {
 		customerConnection = new CustomerDaoImpl();
 		Customer temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
 		if (temp == null) {
-			System.out.println("Incorrect input");
+			System.out.println("Incorrect input\n\n"); // TODO add to log file
 			UserUI.showMainMenu();
 		} else {
+			// TODO add to log file
 			showCustomerActionMenu(temp);
 		}
 
@@ -77,6 +79,7 @@ public class CustomerUI extends UserUI {
 	private static void takeCustomerActionInput(Customer customer) {
 		String actionInput = null;
 		boolean validInput = false;
+		// TODO add to log each user choice here.
 		do {
 			actionInput = getInput();
 			switch (actionInput) {
@@ -117,23 +120,25 @@ public class CustomerUI extends UserUI {
 	}
 
 	private static void applyForAccount() {
-		// TODO Auto-generated method stub
-
+		// TODO Implement this
+		
 	}
 
 	private static void showCustomerAccountInfo(Customer customer) {
-		// TODO Auto-generated method stub
+		// TODO implement this
+		// System.out.println("Your Account Infomation Is As Followed: ");
 
 	}
 
 	private static void showCustomerAccountBalance(Customer customer) {
-		// TODO Auto-generated method stub
+		// TODO implement this
 
 	}
 
 	private static void showCustomerPersonalInfo(Customer customer) {
-		// TODO Auto-generated method stub
-
+		// TODO add to log
+		System.out.println("Your info is as followed:");
+		System.out.println("Name: " + customer.getFirstName() + " " + customer.getLastName());
 	}
 
 	private static void showDepositMenu(Customer customer) {

@@ -1,12 +1,8 @@
 package com.java;
 
-import lombok.Getter;
-import lombok.Setter;
-
-
 public class User {
-	String firstName, lastName, userEmail;
-	String login, password;
+	private String firstName, lastName, userEmail;
+	private String login, password;
 	void showAccountInfo() {}
 	void showAccountBalance() {}
 	void showPersonalInfo() {}
