@@ -93,10 +93,7 @@ public class CustomerUI extends UserUI{
 				break;
 			case "8":
 				showMainMenu();
-			case "9":
-				validInput = true;
-				break;
-			default: System.out.println("Please enter a valid input (1/2/3/4/5/6/7/8/9)");
+			default: System.out.println("Please enter a valid option (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)");
 			}
 		} while (!validInput);
 	}
