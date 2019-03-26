@@ -30,6 +30,12 @@ public class AccountDaoImpl implements AccountDao {
         return null;
     }
 
+
+    @Override
+    public Account getAccountByCustomerID(int cust_id) {
+        return null;
+    }
+
     @Override
     public Set getAllBankAccounts() {
         try {
@@ -48,7 +54,7 @@ public class AccountDaoImpl implements AccountDao {
         } finally {
             if (con != null) try {
                 con.close();
-            } catch (SQLException e) {/* ignored*/}
+            } catch (SQLException e) {/*ignored*/}
         }
         return null;
     }
@@ -68,7 +74,7 @@ public class AccountDaoImpl implements AccountDao {
         } finally {
             if (con != null) try {
                 con.close();
-            } catch (SQLException e) {/* ignored*/}
+            } catch (SQLException e) {/*ignored*/}
         }
 
 
@@ -76,6 +82,23 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public void insertBankAccount(Customer customer, int routingNumber, char accountType, char joint) {
+        //HACK: on insert to Account, need to also do an additional insert to add CUST_ID & ACNT_NUMBER to
+        // CUSTOMERACCOUNT
+        try {
+            PreparedStatement stmtAccount = con.prepareStatement("INSERT INTO ACCOUNT (ROUT_NUMBER, ACNT_TYPE, JOINT)" +
+                    " VALUES" +
+                    " (?, ?, ?");
+            PreparedStatement stmtCustomerAccount = con.prepareStatement("INSERT INTO CUSTOMERACCOUNT (CUST_ID, " +
+                    "ACNT_NUMBER) VALUES (?, ?)");
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            {
+                if(con != null) try {
+                    con.close();
+                } catch (SQLException e) {/*ignored*/}
+            }
+        }
 
     }
 
