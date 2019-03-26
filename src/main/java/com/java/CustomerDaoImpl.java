@@ -1,20 +1,137 @@
 package com.java;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CustomerDaoImpl implements CustomerDao {
-
-
+    private Connection con = DBUtil.getInstance();
 
 
     @Override
-    public Customer getCustomer(String username, String password) {
-        Connection con = DBUtil.getInstance();
+    public Customer getCustomerByLoginAndPassword(String login, String password) {
+
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE login=? AND password_text=?");
+            stmt.setString(1, login);
+            stmt.setString(2,password);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+
+                return extractCustomerFromResultSet(rs);
+
+            }
+
+        } catch (SQLException e){
+            System.out.println("Unable to connect, please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/* ignored*/}
+        }
+
+
         return null;
     }
 
     @Override
-    public void createCustomer(String lastname, String firstname, String email, String login, String password) {
+    public Customer getCustomerByID(int id) {
+
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE cust_id=" + id);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+
+                return extractCustomerFromResultSet(rs);
+
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/* ignored*/}
+        }
+        return null;
+    }
+
+    @Override
+    public Set getAllCustomers() {
+
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer");
+            ResultSet rs = stmt.executeQuery();
+            Set<Customer> customers = new HashSet<>();
+
+            while(rs.next()) {
+                Customer customer = extractCustomerFromResultSet(rs);
+                customers.add(customer);
+
+            }
+
+            return customers;
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/* ignored*/}
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public boolean insertCustomer(Customer customer) {
+
+
+        try {
+            PreparedStatement stmt = con.prepareStatement("INSERT INTO Customer (last_name, first_name, " +
+                    "email, login, password_text) values (?, ?, ?, ?, ?)");
+
+            stmt.setString(1, customer.getLastName());
+            stmt.setString(2, customer.getFirstName());
+            stmt.setString(3, customer.getUserEmail());
+            stmt.setString(4, customer.getlogin());
+            stmt.setString(5, customer.getPassword());
+
+            int rowsAdded = stmt.executeUpdate();
+            con.commit();
+
+            if(rowsAdded == 1) {
+                return true;
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/* ignored*/}
+        }
+
+        return false;
+    }
+
+    private Customer extractCustomerFromResultSet(ResultSet rs) throws SQLException {
+
+        Customer customer = new Customer();
+        customer.setCustomerID(rs.getInt(1));
+        customer.setLastName(rs.getString(2));
+        customer.setFirstName(rs.getString(3));
+        customer.setUserEmail(rs.getString(4));
+        customer.setlogin(rs.getString(5));
+        customer.setPassword(rs.getString(6));
+
+        return customer;
 
     }
 }

@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.Properties;
 
 public class DBUtil {
-    static BasicDataSource connectionPool = new BasicDataSource();
+    private static BasicDataSource connectionPool = new BasicDataSource();
 
     static {
         try {
@@ -40,22 +40,3 @@ public class DBUtil {
     }
 }
 
-//    public static void main(String[] args) {
-//        Connection con = null;
-//        try {
-//            con = connectionPool.getConnection();
-//            PreparedStatement st = con.prepareStatement("select * from Customer");
-//            ResultSet rs = st.executeQuery();
-//            while (rs.next()) {
-//                System.out.println(rs.getInt(1));
-//
-//            }
-//            con.close();
-//
-//        } catch (SQLException e) {
-//            System.out.println(e);
-//        }
-//
-//    }
-//
-//}
