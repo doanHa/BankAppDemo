@@ -17,18 +17,25 @@ public class UserUI {
 
 	protected static void takeUserInputMainMenu() {
 		scan = new Scanner(System.in);
-		boolean a = true;
+		boolean validInput = false;
 		do {
 			String input = getInput();
 			if(input.equals("1") || input.equals("2"))
+			{
 				new CustomerUI(input);
+				validInput = true;
+			}
 			else if(input.contentEquals("3"))
-				System.out.println("1");
-			else
-				System.out.println("3");
-				
-			
-		} while (a);
+			{
+				EmployeeUI.employeeLogin();
+				validInput = true;
+			}
+			else if(input.equals("4")) {
+				scan.close();
+				System.exit(0);
+			} else
+				System.out.println("Please enter a valid input (1 | 2 | 3 | 4): ");
+		} while (!validInput);
 		scan.close();
 	}
 	protected static String getInput() {

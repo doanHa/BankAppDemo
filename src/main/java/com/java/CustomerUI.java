@@ -1,9 +1,19 @@
 package com.java;
 
-public class CustomerUI extends UserUI{
+public class CustomerUI extends UserUI {
 	private static CustomerDaoImpl customerConnection;
+
 	public CustomerUI(String input) {
+		switch (input) {
+		case "1":
+			customerLogin();
+			break;
+		case "2":
+			customerRegister();
+			break;
+		}
 	}
+
 	private static void customerRegister() {
 		System.out.println("Welcome Valued Customer");
 		System.out.println("<---------------------------------------->");
@@ -23,8 +33,15 @@ public class CustomerUI extends UserUI{
 		// TODO afterward, take them to the main menu and ask for input
 		customerConnection = new CustomerDaoImpl();
 		Customer temp = new Customer();
+		temp = temp.register(firstNameInput, lastNameInput, usernameInput, passwordInput, emailInput);
+		if (customerConnection.insertCustomer(temp)) {
+			System.out.println("1.Inserted");
+		} else {
+			System.out.println("2.!Inserted");
+		}
 		UserUI.showMainMenu();
 	}
+
 	private static void customerLogin() {
 		System.out.println("Please enter your username: ");
 		String usernameInput = getInput();
@@ -93,14 +110,15 @@ public class CustomerUI extends UserUI{
 				break;
 			case "8":
 				showMainMenu();
-			default: System.out.println("Please enter a valid option (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)");
+			default:
+				System.out.println("Please enter a valid option (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)");
 			}
 		} while (!validInput);
 	}
 
 	private static void applyForAccount() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private static void showCustomerAccountInfo(Customer customer) {

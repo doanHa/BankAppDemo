@@ -16,13 +16,14 @@ public class Customer extends User{
 		this.password = password;
 	}
 
-	public void register(String firstNameInput, String lastNameInput, String loginInput, String passwordInput,
+	public Customer register(String firstNameInput, String lastNameInput, String loginInput, String passwordInput,
 						 String email) {
 		firstName = firstNameInput;
 		lastName = lastNameInput;
 		login = loginInput;
 		password = passwordInput;
 		userEmail = email;
+		return this;
 		//TODO implement register new customer to database
 		// implement check if customer is already in the database
 		// implement check for valid input
