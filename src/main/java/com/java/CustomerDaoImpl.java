@@ -8,176 +8,185 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CustomerDaoImpl implements CustomerDao {
-    private Connection con = DBUtil.getInstance();
+	private Connection con = DBUtil.getInstance();
 
+	@Override
+	public boolean getCustomerByLogin(String login) {
+		boolean validLogin = false;
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE login=?");
+			stmt.setString(1, login);
+			ResultSet rs = stmt.executeQuery();
 
-    @Override
-    public Customer getCustomerByLogin(String login) {
-        try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE login=?");
-            stmt.setString(1, login);
-            ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
 
-            if(rs.next()) {
+				validLogin = true;
 
-                return extractCustomerFromResultSet(rs);
+			}
 
-            }
+		} catch (SQLException e) {
+			System.out.println("Unable to connect please try again later.");
+		} finally {
+			if (con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					/* ignored */}
+		}
+		return validLogin;
+	}
 
-        } catch (SQLException e){
-            System.out.println("Unable to connect please try again later.");
-        } finally {
-            if (con != null) try {
-                con.close();
-            } catch (SQLException e) {/* ignored*/}
-        }
-        return null;
-    }
+	@Override
+	public Customer getCustomerByPassword(String password) {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE password_text=?");
+			stmt.setString(1, password);
+			ResultSet rs = stmt.executeQuery();
 
-    @Override
-    public Customer getCustomerByPassword(String password) {
-        try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE password_text=?");
-            stmt.setString(1, password);
-            ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
 
-            if(rs.next()) {
+				return extractCustomerFromResultSet(rs);
 
-                return extractCustomerFromResultSet(rs);
+			}
 
-            }
+		} catch (SQLException e) {
+			System.out.println("Unable to connect please try again later.");
+		} finally {
+			if (con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					/* ignored */}
+		}
+		return null;
+	}
 
-        } catch (SQLException e){
-            System.out.println("Unable to connect please try again later.");
-        } finally {
-            if (con != null) try {
-                con.close();
-            } catch (SQLException e) {/* ignored*/}
-        }
-        return null;
-    }
+	@Override
+	public Customer getCustomerByLoginAndPassword(String login, String password) {
 
-    @Override
-    public Customer getCustomerByLoginAndPassword(String login, String password) {
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE login=? AND password_text=?");
+			stmt.setString(1, login);
+			stmt.setString(2, password);
+			ResultSet rs = stmt.executeQuery();
 
-        try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE login=? AND password_text=?");
-            stmt.setString(1, login);
-            stmt.setString(2,password);
-            ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
 
-            if(rs.next()) {
+				return extractCustomerFromResultSet(rs);
 
-                return extractCustomerFromResultSet(rs);
+			}
 
-            }
+		} catch (SQLException e) {
+			System.out.println("Unable to connect please try again later.");
+		} finally {
+			if (con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					/* ignored */}
+		}
 
-        } catch (SQLException e){
-            System.out.println("Unable to connect please try again later.");
-        } finally {
-            if (con != null) try {
-                con.close();
-            } catch (SQLException e) {/* ignored*/}
-        }
+		return null;
+	}
 
+	@Override
+	public Customer getCustomerByID(int id) {
 
-        return null;
-    }
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE cust_id=" + id);
+			ResultSet rs = stmt.executeQuery();
 
-    @Override
-    public Customer getCustomerByID(int id) {
+			if (rs.next()) {
 
-        try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE cust_id=" + id);
-            ResultSet rs = stmt.executeQuery();
+				return extractCustomerFromResultSet(rs);
 
-            if(rs.next()) {
+			}
 
-                return extractCustomerFromResultSet(rs);
+		} catch (SQLException e) {
+			System.out.println("Unable to connect please try again later.");
+		} finally {
+			if (con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					/* ignored */}
+		}
+		return null;
+	}
 
-            }
+	@Override
+	public Set getAllCustomers() {
 
-        } catch (SQLException e) {
-            System.out.println("Unable to connect please try again later.");
-        } finally {
-            if (con != null) try {
-                con.close();
-            } catch (SQLException e) {/* ignored*/}
-        }
-        return null;
-    }
+		try {
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer");
+			ResultSet rs = stmt.executeQuery();
+			Set<Customer> customers = new HashSet<>();
 
-    @Override
-    public Set getAllCustomers() {
+			while (rs.next()) {
+				Customer customer = extractCustomerFromResultSet(rs);
+				customers.add(customer);
 
-        try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer");
-            ResultSet rs = stmt.executeQuery();
-            Set<Customer> customers = new HashSet<>();
+			}
 
-            while(rs.next()) {
-                Customer customer = extractCustomerFromResultSet(rs);
-                customers.add(customer);
+			return customers;
+		} catch (SQLException e) {
+			System.out.println("Unable to connect please try again later.");
+		} finally {
+			if (con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					/* ignored */}
+		}
 
-            }
+		return null;
 
-            return customers;
-        } catch (SQLException e) {
-            System.out.println("Unable to connect please try again later.");
-        } finally {
-            if (con != null) try {
-                con.close();
-            } catch (SQLException e) {/* ignored*/}
-        }
+	}
 
-        return null;
+	@Override
+	public boolean insertCustomer(Customer customer) {
 
-    }
+		try {
+			PreparedStatement stmt = con.prepareStatement("INSERT INTO Customer (last_name, first_name, "
+					+ "email, login, password_text) values (?, ?, ?, ?, ?)");
 
-    @Override
-    public boolean insertCustomer(Customer customer) {
+			stmt.setString(1, customer.getLastName());
+			stmt.setString(2, customer.getFirstName());
+			stmt.setString(3, customer.getUserEmail());
+			stmt.setString(4, customer.getlogin());
+			stmt.setString(5, customer.getPassword());
 
+			int rowsAdded = stmt.executeUpdate();
+			con.commit();
 
-        try {
-            PreparedStatement stmt = con.prepareStatement("INSERT INTO Customer (last_name, first_name, " +
-                    "email, login, password_text) values (?, ?, ?, ?, ?)");
+			if (rowsAdded == 1) {
+				return true;
+			}
 
-            stmt.setString(1, customer.getLastName());
-            stmt.setString(2, customer.getFirstName());
-            stmt.setString(3, customer.getUserEmail());
-            stmt.setString(4, customer.getlogin());
-            stmt.setString(5, customer.getPassword());
+		} catch (SQLException e) {
+			System.out.println("Unable to connect please try again later.");
+		} finally {
+			if (con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+					/* ignored */}
+		}
 
-            int rowsAdded = stmt.executeUpdate();
-            con.commit();
+		return false;
+	}
 
-            if(rowsAdded == 1) {
-                return true;
-            }
+	private Customer extractCustomerFromResultSet(ResultSet rs) throws SQLException {
 
+		Customer customer = new Customer();
+		customer.setCustomerID(rs.getInt(1));
+		customer.setLastName(rs.getString(2));
+		customer.setFirstName(rs.getString(3));
+		customer.setUserEmail(rs.getString(4));
+		customer.setlogin(rs.getString(5));
+		customer.setPassword(rs.getString(6));
 
-        } catch (SQLException e) {
-            System.out.println("Unable to connect please try again later.");
-        } finally {
-            if (con != null) try {
-                con.close();
-            } catch (SQLException e) {/* ignored*/}
-        }
+		return customer;
 
-        return false;
-    }
-
-    private Customer extractCustomerFromResultSet(ResultSet rs) throws SQLException {
-
-        Customer customer = new Customer();
-        customer.setCustomerID(rs.getInt(1));
-        customer.setLastName(rs.getString(2));
-        customer.setFirstName(rs.getString(3));
-        customer.setUserEmail(rs.getString(4));
-        customer.setlogin(rs.getString(5));
-        customer.setPassword(rs.getString(6));
-
-        return customer;
-
-    }
+	}
 }

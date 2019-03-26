@@ -5,7 +5,9 @@ import java.util.Scanner;
 public class Bank {
 	private static Scanner scan;
 	private static CustomerDaoImpl customerConnection;
-	//HACK: Need to make sure we handles the NullPointerExceptions from passing values for records that do not exist
+
+	// HACK: Need to make sure we handles the NullPointerExceptions from passing
+	// values for records that do not exist
 	// (i.e user passing in wrong log in info, same with employer)
 	public static void main(String[] args) {
 
@@ -78,7 +80,9 @@ public class Bank {
 		// TODO insert an account into the table with above information.
 		// TODO then, display a message saying their account has been registered
 		// TODO afterward, take them to the main menu and ask for input
-		showCustomerActionMenu();
+		customerConnection = new CustomerDaoImpl();
+		Customer temp = new Customer();
+		main(null);
 	}
 
 	private static void customerLogin() {
@@ -90,15 +94,18 @@ public class Bank {
 		// TODO use usernameInput and passwordInput to validate customer login
 		// TODO if the inputs is valid, then display the menu for available actions
 		customerConnection = new CustomerDaoImpl();
-		if(customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput) == null) {
-			System.out.println("Wrong Log In Information");
+		Customer temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
+		if (temp == null) {
+			System.out.println("Incorrect input");
+			main(null);
+		} else {
+			showCustomerActionMenu(temp);
 		}
-		
-		
+
 	}
 
-	private static void showCustomerActionMenu() {
-		System.out.println("How may we help you today?");
+	private static void showCustomerActionMenu(Customer customer) {
+		System.out.println("How may we help you today, " + customer.getFirstName() + " ?");
 		System.out.println("1. Apply for an Account");
 		System.out.println("2. Show Account Infomation");
 		System.out.println("3. Show Account Balancce");
@@ -107,39 +114,49 @@ public class Bank {
 		System.out.println("6. Withdraw Money to an Account");
 		System.out.println("7. Transfer Money to you Other Account");
 		System.out.println("8. Log Out");
-		takeUserActionInput();
+		takeCustomerActionInput(customer);
 	}
 
-	private static void takeUserActionInput() {
+	private static void takeCustomerActionInput(Customer customer) {
 		String actionInput = null;
 		boolean validInput = false;
 		do {
+			actionInput = getInput();
 			switch (actionInput) {
-			case "1": applyForAccount();
+			case "1":
+				applyForAccount();
 				validInput = true;
 				break;
-			case "2": showCustomerAccountInfo();
+			case "2":
+				showCustomerAccountInfo(customer);
 				validInput = true;
 				break;
-			case "3": showCustomerAccountBalance();
+			case "3":
+				showCustomerAccountBalance(customer);
 				validInput = true;
 				break;
-			case "4": showCustomerPersonalInfo();
+			case "4":
+				showCustomerPersonalInfo(customer);
 				validInput = true;
 				break;
-			case "5": showDepositMenu();
+			case "5":
+				showDepositMenu(customer);
 				validInput = true;
 				break;
-			case "6": showWithdrawMenu();
-				validInput = true;
-				break; 
-			case "7": showTransferMenu();
+			case "6":
+				showWithdrawMenu(customer);
 				validInput = true;
 				break;
-			case "8": showMainMenu();
+			case "7":
+				showTransferMenu(customer);
+				validInput = true;
+				break;
+			case "8":
+				showMainMenu();
 			case "9":
 				validInput = true;
 				break;
+			default: System.out.println("Please enter a valid input (1/2/3/4/5/6/7/8/9)");
 			}
 		} while (!validInput);
 	}
@@ -149,34 +166,34 @@ public class Bank {
 		
 	}
 
-	private static void showCustomerAccountInfo() {
+	private static void showCustomerAccountInfo(Customer customer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	private static void showCustomerAccountBalance() {
+	private static void showCustomerAccountBalance(Customer customer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	private static void showCustomerPersonalInfo() {
+	private static void showCustomerPersonalInfo(Customer customer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	private static void showDepositMenu() {
+	private static void showDepositMenu(Customer customer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	private static void showWithdrawMenu() {
+	private static void showWithdrawMenu(Customer customer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	private static void showTransferMenu() {
+	private static void showTransferMenu(Customer customer) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private static String getInput() {
