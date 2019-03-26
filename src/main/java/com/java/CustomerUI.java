@@ -147,15 +147,20 @@ public class CustomerUI extends UserUI {
 
 	private static void showDepositMenu(Customer customer) {
 		// TODO implements this
+		getAllAccountForCustomer(customer);
 	}
 
 	private static void showWithdrawMenu(Customer customer) {
-		// TODO Auto-generated method stub
-
+		// TODO implement this
+		getAllAccountForCustomer(customer);
 	}
 
 	private static void showTransferMenu(Customer customer) {
-		// TODO Auto-generated method stub
+		// TODO implement this
+		getAllAccountForCustomer(customer);
 
+	}
+	private static void getAllAccountForCustomer(Customer customer) {
+		// TODO implement this
 	}
 }
