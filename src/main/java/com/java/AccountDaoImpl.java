@@ -4,9 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+
+@SuppressWarnings("Duplicates")
 public class AccountDaoImpl implements AccountDao {
     Connection con = DBUtil.getInstance();
 
@@ -32,23 +36,20 @@ public class AccountDaoImpl implements AccountDao {
 
 
     @Override
-    public Account getAccountByCustomerID(int cust_id) {
-        return null;
-    }
-
-    @Override
-    public Set getAllBankAccounts() {
+    public List<Account> getAccountsByCustomerID(int cust_id) {
+        List<Account> accounts = new ArrayList<>();
         try {
-            PreparedStatement stmt = con.prepareStatement("SELECT * FROM ACCOUNT");
-            ResultSet rs = stmt.executeQuery();
-            Set<Account> accounts = new HashSet<>();
+            PreparedStatement stmt = con.prepareStatement("SELECT A1.* FROM ACCOUNT A1 JOIN CUSTOMERACCOUNT C2 on A1" +
+                    ".ACNT_NUMBER = C2" +
+                    ".ACNT_NUMBER WHERE C2.CUST_ID =" + cust_id);
 
-            while (rs.next()) {
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()) {
                 Account account = extractAccountFromResultSet(rs);
                 accounts.add(account);
             }
 
-            return accounts;
         } catch (SQLException e) {
             System.out.println("Unable to connect please try again later.");
         } finally {
@@ -56,18 +57,43 @@ public class AccountDaoImpl implements AccountDao {
                 con.close();
             } catch (SQLException e) {/*ignored*/}
         }
-        return null;
+        return accounts;
     }
 
     @Override
-    public void updateAccount(Account account) {
+    public Set getAllBankAccounts() {
+        Set<Account> accounts = new HashSet<>();
         try {
-            PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET BALANCE=?, ACNT_STATUS=?, ACNT_LIMIT=? " +
-                    "WHERE ACNT_NUMBER=?");
-            stmt.setDouble(1, account.getBalances());
-            stmt.setString(2, String.valueOf(account.getAccountStatus()));
-            stmt.setDouble(3, account.getAccountLimit());
-            stmt.setInt(4, account.getAccountNumber());
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM ACCOUNT");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Account account = extractAccountFromResultSet(rs);
+                accounts.add(account);
+            }
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/*ignored*/}
+        }
+        return accounts;
+    }
+
+    @Override
+    public boolean updateAccountStatus(Account account) {
+        try {
+            PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET ACNT_STATUS=? WHERE ACNT_NUMBER=?");
+            stmt.setString(1, String.valueOf(account.getAccountStatus()));
+            stmt.setInt(2, account.getAccountNumber());
+
+            int rowsAdded = stmt.executeUpdate();
+            con.commit();
+
+            if(rowsAdded == 1) {
+                return true;
+            }
+
 
         } catch (SQLException e) {
             System.out.println("Unable to connect please try again later.");
@@ -77,17 +103,60 @@ public class AccountDaoImpl implements AccountDao {
             } catch (SQLException e) {/*ignored*/}
         }
 
+        return false;
+    }
 
+
+    @Override
+    public boolean updateAccountBalance(Account account) {
+        try {
+            PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET BALANCE WHERE ACNT_NUMBER=?");
+            stmt.setDouble(1, account.getBalances());
+            stmt.setInt(2, account.getAccountNumber());
+
+            int rowsAdded = stmt.executeUpdate();
+            con.commit();
+
+            if(rowsAdded == 1) {
+                return true;
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/*ignored*/}
+        }
+
+        return false;
     }
 
     @Override
-    public void insertBankAccount(Customer customer, int routingNumber, char accountType, char joint) {
+    public boolean updateAccountLimit(Account account) {
+        return false;
+    }
+
+    @Override
+    public boolean updateAccountAnnualInterestRate(Account account) {
+        return false;
+    }
+
+    @Override
+    public boolean insertBankAccount(Customer customer, int routingNumber, char accountType, char joint) {
         //HACK: on insert to Account, need to also do an additional insert to add CUST_ID & ACNT_NUMBER to
         // CUSTOMERACCOUNT
         try {
             PreparedStatement stmtAccount = con.prepareStatement("INSERT INTO ACCOUNT (ROUT_NUMBER, ACNT_TYPE, JOINT)" +
                     " VALUES" +
                     " (?, ?, ?");
+
+            stmtAccount.setInt(1, routingNumber);
+            stmtAccount.setString(2, String.valueOf(accountType));
+            stmtAccount.setString(3, String.valueOf(joint));
+
+
             PreparedStatement stmtCustomerAccount = con.prepareStatement("INSERT INTO CUSTOMERACCOUNT (CUST_ID, " +
                     "ACNT_NUMBER) VALUES (?, ?)");
         } catch (SQLException e) {
@@ -99,7 +168,7 @@ public class AccountDaoImpl implements AccountDao {
                 } catch (SQLException e) {/*ignored*/}
             }
         }
-
+        return false;
     }
 
     public Account extractAccountFromResultSet(ResultSet rs) throws SQLException {
