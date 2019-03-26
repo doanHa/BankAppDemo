@@ -147,17 +147,25 @@ public class CustomerUI extends UserUI {
 
 	private static void showDepositMenu(Customer customer) {
 		// TODO implements this
+		System.out.println("Here is a list of your account: ");
 		getAllAccountForCustomer(customer);
+		System.out.println("Please enter an account number to deposit: ");
+		System.out.println("Reminder: If you want to deposit into an account that is not yours,\n\tPlease provide the receiving account number!");
 	}
 
 	private static void showWithdrawMenu(Customer customer) {
 		// TODO implement this
+		System.out.println("Here is a list of your account: ");
 		getAllAccountForCustomer(customer);
+		System.out.println("Please enter an accoun number to withdraw: ");
+		System.out.println("Reminder: You can only withdraw from your own account!");
 	}
 
 	private static void showTransferMenu(Customer customer) {
 		// TODO implement this
+		System.out.println("Here Is A List Of Your Account: ");
 		getAllAccountForCustomer(customer);
+		System.out.println("Please Enter An Account Number To Transfer From: ");
 
 	}
 	private static void getAllAccountForCustomer(Customer customer) {
