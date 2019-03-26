@@ -16,7 +16,7 @@ public class Bank {
 	}
 
 	private static void showMainMenu() {
-		System.out.println("Welcome to the bank");
+		System.out.println("Welcome to Bankher!");
 		System.out.println("<------------------->");
 		System.out.println("Please choose an option");
 		System.out.println("1. Customer Login");
@@ -46,15 +46,15 @@ public class Bank {
 			case "4":
 				System.exit(0);
 			default:
-				System.out.println("Please enter a valid input (1/2/3/4/5/6): ");
+				System.out.println("Please enter a valid option (1 | 2 | 3 | 4): ");
 			}
 		} while (a);
 		scan.close();
 	}
 
 	private static void employeeLogin() {
-		System.out.println("Welcome to work! Please log in");
-		System.out.println("Please enter your username: ");
+		System.out.println("Welcome back! Please log in");
+		System.out.println("Please enter your user login: ");
 		String usernameInput = getInput();
 		System.out.println("Please enter your password: ");
 		String passwordInput = getInput();
@@ -64,19 +64,19 @@ public class Bank {
 	}
 
 	private static void customerRegister() {
-		System.out.println("Welcome Valued Customer");
+		System.out.println("Welcome valued customer");
 		System.out.println("<---------------------------------------->");
 		System.out.println("Please enter your first name: ");
 		String firstNameInput = getInput();
 		System.out.println("Please enter your last name: ");
 		String lastNameInput = getInput();
-		System.out.println("Please enter your username: ");
+		System.out.println("Please enter your user login: ");
 		String usernameInput = getInput();
 		System.out.println("Please enter your password: ");
 		String passwordInput = getInput();
 		System.out.println("Please enter your email address");
 		String emailInput = getInput();
-		System.out.println("Please wait for your account to be registered");
+		System.out.println("Creating account...");
 		// TODO insert an account into the table with above information.
 		// TODO then, display a message saying their account has been registered
 		// TODO afterward, take them to the main menu and ask for input
@@ -86,7 +86,8 @@ public class Bank {
 	}
 
 	private static void customerLogin() {
-		System.out.println("Please enter your username: ");
+		System.out.println("Welcome back! Please log in");
+		System.out.println("Please enter your user login: ");
 		String usernameInput = getInput();
 		System.out.println("Please enter your password: ");
 		String passwordInput = getInput();
@@ -96,7 +97,7 @@ public class Bank {
 		customerConnection = new CustomerDaoImpl();
 		Customer temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
 		if (temp == null) {
-			System.out.println("Incorrect input");
+			System.out.println("Incorrect credentials, please try again.");
 			main(null);
 		} else {
 			showCustomerActionMenu(temp);
@@ -105,10 +106,10 @@ public class Bank {
 	}
 
 	private static void showCustomerActionMenu(Customer customer) {
-		System.out.println("How may we help you today, " + customer.getFirstName() + " ?");
+		System.out.println("Welcome " + customer.getFirstName() + ", How may we help you today?");
 		System.out.println("1. Apply for an Account");
 		System.out.println("2. Show Account Infomation");
-		System.out.println("3. Show Account Balancce");
+		System.out.println("3. Show Account Balance");
 		System.out.println("4. Show Personal Infomation");
 		System.out.println("5. Deposit Money to an Account");
 		System.out.println("6. Withdraw Money to an Account");
@@ -153,10 +154,7 @@ public class Bank {
 				break;
 			case "8":
 				showMainMenu();
-			case "9":
-				validInput = true;
-				break;
-			default: System.out.println("Please enter a valid input (1/2/3/4/5/6/7/8/9)");
+			default: System.out.println("Please enter a valid option (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)");
 			}
 		} while (!validInput);
 	}
