@@ -6,6 +6,7 @@ public class Bank {
 	// HACK: Need to make sure we handles the NullPointerExceptions from passing
 	// values for records that do not exist
 	// (i.e user passing in wrong log in info, same with employer)
+	static Scanner scan;
 	public static void main(String[] args) {
 
 		showMainMenu();
@@ -160,7 +161,9 @@ public class Bank {
 		// TODO Auto-generated method stub
 		
 	}
-
+	private static String getInput() {
+		return scan.nextLine();
+	}
 
 	/*
 	 * static Logger logger= Logger.getLogger(Demo1.class);
