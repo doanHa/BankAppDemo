@@ -1,9 +1,12 @@
 package com.java;
 
+import java.util.Set;
+
 public interface AccountDao {
-    public Account getAccount(int id);
-    public void updateAccount(int id);
-    public void createBankAccount(int routingNumber, char accountType, char joint);
+   Account getAccountByAccountNumber(int accountNumber);
+   Set getAllBankAccounts();
+   void updateAccount(Account account);
+   void insertBankAccount(Customer customer, int routingNumber, char accountType, char joint);
 
 
 
