@@ -36,8 +36,8 @@ public class AccountDaoImpl implements AccountDao {
 
 
     @Override
-    public List<Account> getAccountsByCustomerID(int cust_id) {
-        List<Account> accounts = new ArrayList<>();
+    public Set<Account> getAccountsByCustomerID(int cust_id) {
+        Set<Account> accounts = new HashSet<>();
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT A1.* FROM ACCOUNT A1 JOIN CUSTOMERACCOUNT C2 on A1" +
                     ".ACNT_NUMBER = C2" +
@@ -61,7 +61,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public Set getAllBankAccounts() {
+    public Set<Account> getAllBankAccounts() {
         Set<Account> accounts = new HashSet<>();
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM ACCOUNT");

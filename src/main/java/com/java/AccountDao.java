@@ -5,7 +5,7 @@ import java.util.Set;
 
 public interface AccountDao {
    Account getAccountByAccountNumber(int accountNumber);
-   List<Account> getAccountsByCustomerID(int cust_id);
+   Set getAccountsByCustomerID(int cust_id);
    Set getAllBankAccounts();
    boolean updateAccountStatus(Account account);
    boolean updateAccountBalance(Account account);
