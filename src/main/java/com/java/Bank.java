@@ -1,11 +1,10 @@
 package com.java;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class Bank {
-	static Scanner scan;
-
+	private static Scanner scan;
+	private static CustomerDaoImpl customerConnection;
 	//HACK: Need to make sure we handles the NullPointerExceptions from passing values for records that do not exist
 	// (i.e user passing in wrong log in info, same with employer)
 	public static void main(String[] args) {
@@ -90,6 +89,12 @@ public class Bank {
 		System.out.println("Please wait");
 		// TODO use usernameInput and passwordInput to validate customer login
 		// TODO if the inputs is valid, then display the menu for available actions
+		customerConnection = new CustomerDaoImpl();
+		if(customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput) == null) {
+			System.out.println("Wrong Log In Information");
+		}
+		
+		
 	}
 
 	private static void showCustomerActionMenu() {
