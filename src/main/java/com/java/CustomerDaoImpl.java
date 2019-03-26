@@ -12,6 +12,52 @@ public class CustomerDaoImpl implements CustomerDao {
 
 
     @Override
+    public Customer getCustomerByLogin(String login) {
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE login=?");
+            stmt.setString(1, login);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+
+                return extractCustomerFromResultSet(rs);
+
+            }
+
+        } catch (SQLException e){
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/* ignored*/}
+        }
+        return null;
+    }
+
+    @Override
+    public Customer getCustomerByPassword(String password) {
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE password_text=?");
+            stmt.setString(1, password);
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+
+                return extractCustomerFromResultSet(rs);
+
+            }
+
+        } catch (SQLException e){
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/* ignored*/}
+        }
+        return null;
+    }
+
+    @Override
     public Customer getCustomerByLoginAndPassword(String login, String password) {
 
         try {
@@ -27,7 +73,7 @@ public class CustomerDaoImpl implements CustomerDao {
             }
 
         } catch (SQLException e){
-            System.out.println("Unable to connect, please try again later.");
+            System.out.println("Unable to connect please try again later.");
         } finally {
             if (con != null) try {
                 con.close();
