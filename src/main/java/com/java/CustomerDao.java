@@ -3,7 +3,7 @@ package com.java;
 import java.util.Set;
 
 public interface CustomerDao {
-    Customer getCustomerByLogin(String login);
+    boolean getCustomerByLogin(String login);
     Customer getCustomerByPassword(String password);
     Customer getCustomerByLoginAndPassword(String login, String password);
     Customer getCustomerByID(int id);
