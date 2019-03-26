@@ -14,4 +14,12 @@ public class SavingAccount extends Account{
 		return 10000000000000.0;
 		//TODO replace the above line with getting accountLimit from the database.
 	}
+
+	public double getAnnualInterestRate() {
+		return annualInterestRate;
+	}
+
+	public void setAnnualInterestRate(double annualInterestRate) {
+		this.annualInterestRate = annualInterestRate;
+	}
 }
