@@ -136,14 +136,17 @@ public class CustomerUI extends UserUI {
 	}
 
 	private static void showCustomerPersonalInfo(Customer customer) {
-		// TODO add to log
 		System.out.println("Your info is as followed:");
-		System.out.println("Name: " + customer.getFirstName() + " " + customer.getLastName());
+		System.out.println("|Name      |  " + customer.getFirstName() + " " + customer.getLastName() + "  |");
+		System.out.println("|Email     |  " + customer.getUserEmail() + "  |");
+		System.out.println("|Username  |  " + customer.getlogin() + "     |");
+		System.out.println("|User ID   |  " + customer.getCustomerID() + "     |");
+		System.out.println();
+		showCustomerActionMenu(customer);
 	}
 
 	private static void showDepositMenu(Customer customer) {
-		// TODO Auto-generated method stub
-
+		// TODO implements this
 	}
 
 	private static void showWithdrawMenu(Customer customer) {
