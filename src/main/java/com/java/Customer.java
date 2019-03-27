@@ -2,7 +2,6 @@ package com.java;
 
 public class Customer extends User{
 	  private int customerID;
-
 	 Customer() {
 
 	 }

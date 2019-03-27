@@ -39,7 +39,8 @@ public class CustomerUI extends UserUI {
 		Customer temp = new Customer();
 		temp = temp.register(firstNameInput, lastNameInput, usernameInput, passwordInput, emailInput);
 		if (customerConnection.insertCustomer(temp)) {
-			System.out.println("Your account has been registered.\nYou can log into your account by using you username and password.");
+			System.out.println(
+					"Your account has been registered.\nYou can log into your account by using you username and password.");
 		} else {
 			System.out.println("Your account could not be registered at this time, please try again later");
 		}
@@ -125,12 +126,40 @@ public class CustomerUI extends UserUI {
 
 	private static void applyForAccount() {
 		// TODO Implement this
-		
+		int[] routingNumber = new int[3];
+		routingNumber[0] = 10010009;
+		routingNumber[1] = 10020078;
+		routingNumber[2] = 10050001;
+		int accountRoutingNumber = (int) (Math.random() * 3);
+		System.out.println("Please Answer The Following Questions");
+		System.out.println("Would you like to create a checking or saving account? (Checking/Saving)");
+		String first_name = getInput();
+		System.out.println("Would you like this to be a joint account? (Y/N)");
+		String joint = null;
+		boolean validInput = false;
+		String joint_customer_id = null;
+		do {
+			joint = getInput();
+			switch (joint) {
+			case "Y":
+				validInput = true;
+				System.out.println("Please Enter Your First Name: ");
+				joint_customer_id = getInput();
+				break;
+			case "N":
+				validInput = true;
+				break;
+			default:
+				System.out.println("Please enter a valid input (Y/N)");
+			}
+		} while (!validInput);
+		System.out.println("All done!");
+
 	}
 
 	private static void showCustomerAccountInfo(Customer customer) {
 		// TODO implement this
-		// System.out.println("Your Account Infomation Is As Followed: ");
+		System.out.println("Your Account Infomation Is As Followed: ");
 
 	}
 
@@ -154,12 +183,25 @@ public class CustomerUI extends UserUI {
 		System.out.println("Here is a list of your account: ");
 		showAllAccountForCustomer(customer);
 		System.out.println("<----------------------------------------------------->");
-		System.out.println("Reminder: If you want to deposit into an account that is not yours,\n\tPlease provide the receiving account number!");
+		System.out.println(
+				"Reminder: If you want to deposit into an account that is not yours,\n\tPlease provide the receiving account number!");
 		System.out.println("Please enter an account number to deposit: ");
 		String accNumDeposit = getInput();
 		System.out.println("Please enter the amount you want to deposit: ");
 		String amountToDeposit = getInput();
 		System.out.println("Please wait a minute!");
+		AccountDaoImpl accountConnection = new AccountDaoImpl();
+		Account temp = null;
+		try {
+			int accNumberDeposit = Integer.parseInt(accNumDeposit);
+			temp = accountConnection.getAccountByAccountNumber(accNumberDeposit);
+		} catch (NumberFormatException numFEx) {
+			System.out.println("Invalid account number");
+		}
+		if (temp == null) {
+			System.out.println("No such account exist");
+		}
+
 		System.out.println("All Done!");
 		showCustomerActionMenu(customer);
 	}
@@ -169,7 +211,7 @@ public class CustomerUI extends UserUI {
 		System.out.println("Here is a list of your account: ");
 		showAllAccountForCustomer(customer);
 		System.out.println("<----------------------------------------------------->");
-		System.out.println("Reminder: You can only withdraw from your own account!");		
+		System.out.println("Reminder: You can only withdraw from your own account!");
 		System.out.println("Please enter an accoun number to withdraw: ");
 		String accNumWithdraw = getInput();
 		System.out.println("Please enter the amount you want to withdraw: ");
@@ -180,11 +222,10 @@ public class CustomerUI extends UserUI {
 	}
 
 	private static void showTransferMenu(Customer customer) {
-		// TODO implement this
 		System.out.println("Here Is A List Of Your Account: ");
 		showAllAccountForCustomer(customer);
 		System.out.println("<----------------------------------------------------->");
-		System.out.println("Reminder: You can only transfer between your own account!");		
+		System.out.println("Reminder: You can only transfer between your own account!");
 		System.out.println("Please Enter An Account Number To Transfer From: ");
 		String accNumTransferFrom = getInput();
 		System.out.println("Please Enter An AccountNumber To Transfer To: ");
@@ -194,35 +235,39 @@ public class CustomerUI extends UserUI {
 		System.out.println("Please wait a minute!");
 		System.out.println("All Done!");
 		showCustomerActionMenu(customer);
-		
+
 	}
+
 	private static Set<Account> getAllAccountForCustomer(Customer customer) {
 		// TODO implement this
 		Set<Account> test = new HashSet<Account>();
-		for(int i = 0;i<5;i++) {
+		for (int i = 0; i < 5; i++) {
 			Account temp = new CheckingAccount();
 			temp.setAccountNumber(i);
-			temp.setBalances(10000*i+100);
+			temp.setBalances(10000 * i + 100);
 			test.add(temp);
 		}
-		for(int i = 6;i<10;i++) {
+		for (int i = 6; i < 10; i++) {
 			Account temp = new SavingAccount();
 			temp.setAccountNumber(i);
-			temp.setBalances(10000*i+100);
+			temp.setBalances(10000 * i + 100);
 			test.add(temp);
 		}
 		return test;
 	}
+
 	private static void showAllAccountForCustomer(Customer customer) {
 		Set<Account> test = getAllAccountForCustomer(customer);
 		int x = 1;
 		Iterator<Account> customerAccounts = test.iterator();
-		while(customerAccounts.hasNext()) {
+		while (customerAccounts.hasNext()) {
 			Account temp = customerAccounts.next();
-			if(temp instanceof CheckingAccount)
-				System.out.println("Checking account " + x + " Account Number is " + temp.getAccountNumber() + " Account balances is " + temp.getBalances());
+			if (temp instanceof CheckingAccount)
+				System.out.println("Checking account " + x + " Account Number is " + temp.getAccountNumber()
+						+ " Account balances is " + temp.getBalances());
 			else
-				System.out.println("Saving Account " + x + " Account Number is " + temp.getAccountNumber() + " Account balances is " + temp.getBalances());
+				System.out.println("Saving Account " + x + " Account Number is " + temp.getAccountNumber()
+						+ " Account balances is " + temp.getBalances());
 			x++;
 		}
 	}
