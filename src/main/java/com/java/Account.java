@@ -8,16 +8,13 @@ public abstract class Account{
 	protected double accountLimit;
 	private char accountStatus;
 
-	void deposit(double amount, int userID, int receivingAccountID) {
-		//TODO check userID for validation
-		//TODO if userID is valid, get balances from database and put it in balances variable
+	void deposit(double amount) {
 		if(amount < 0)
 			System.out.println("Invalid amount");
 		if(amount > accountLimit || (balances + amount) > accountLimit)
 			System.out.println("Exceed Account Limit");
 		else
 			balances += amount;
-		//TODO update balances in the database
 	}
 	void withdraw(double amount, int userID) {
 		//TODO check userID for validation
