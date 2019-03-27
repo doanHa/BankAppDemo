@@ -4,9 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -144,13 +142,12 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public boolean insertBankAccount(Customer customer, int routingNumber, char accountType, char joint) {
+    public boolean insertBankAccount(Customer customer, int routingNumber, char accountType, char joint,
+                                     int jointCust_id) {
         //HACK: on insert to Account, need to also do an additional insert to add CUST_ID & ACNT_NUMBER to
         // CUSTOMERACCOUNT
         try {
-            PreparedStatement stmtAccount = con.prepareStatement("INSERT INTO ACCOUNT (ROUT_NUMBER, ACNT_TYPE, JOINT)" +
-                    " VALUES" +
-                    " (?, ?, ?");
+            PreparedStatement stmtAccount = con.prepareStatement("");
 
             stmtAccount.setInt(1, routingNumber);
             stmtAccount.setString(2, String.valueOf(accountType));
