@@ -47,6 +47,7 @@ public class EmployeeUI extends UserUI {
 				showApproveDenyMenu(employee);
 				break;
 			case "2":
+				showCustomersAccountsInfo();
 				break;
 			case "3":
 				break;
@@ -58,6 +59,23 @@ public class EmployeeUI extends UserUI {
 				System.out.println("Please enter a valid option (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)");
 			}
 		} while (!validInput);
+	}
+
+	private static void showCustomersAccountsInfo() {
+		AccountDaoImpl accountConn = new AccountDaoImpl();
+		Set<Account> accounts = accountConn.getAllBankAccounts();
+		Iterator<Account> accountsIterator = accounts.iterator();
+		while(accountsIterator.hasNext()) {
+			Account account = accountsIterator.next();
+			System.out.println("|Account Number       |" + account.getAccountNumber());
+			System.out.println("|Routing Number       |" + account.getRoutingNumber());
+			System.out.println("|Account Type         |" + account.getAccountType());
+			System.out.println("|Account Limit        |" + account.getAccountLimit());
+			if (account instanceof SavingAccount)
+				System.out.println("|Annual Interest Rate |" + ((SavingAccount) account).getAnnualInterestRate());
+			System.out.println("|Account Status       |" + account.getAccountStatus());
+			System.out.println("----------------------");
+		}
 	}
 
 	private static void showApproveDenyMenu(Employee emp) {

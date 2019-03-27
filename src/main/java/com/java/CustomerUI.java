@@ -36,9 +36,16 @@ public class CustomerUI extends UserUI {
 		// TODO then, display a message saying their account has been registered
 		// TODO afterward, take them to the main menu and ask for input
 		customerConnection = new CustomerDaoImpl();
-		Customer temp = new Customer();
-		temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
-		temp = temp.register(firstNameInput, lastNameInput, usernameInput, passwordInput, emailInput);
+		Customer temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
+		if(temp == null) {
+			temp = new Customer();
+			temp = temp.register(firstNameInput, lastNameInput, usernameInput, passwordInput, emailInput);
+		}else
+		{
+			System.out.println("Username has been taken");
+			showMainMenu();
+			return;
+		}
 		if (customerConnection.insertCustomer(temp)) {
 			System.out.println(
 					"Your account has been registered.\nYou can log into your account by using you username and password.");
