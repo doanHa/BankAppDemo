@@ -232,6 +232,7 @@ public class AccountDaoImpl implements AccountDao {
             account.setRoutingNumber(rs.getInt(2));
             account.setBalances(rs.getDouble(3));
             account.setAccountType(accountType);
+            account.setAccountStatus(rs.getString(5).charAt(0));
 
             return account;
         } else {
@@ -240,6 +241,7 @@ public class AccountDaoImpl implements AccountDao {
             account.setRoutingNumber(rs.getInt(2));
             account.setBalances(rs.getDouble(3));
             account.setAccountType(accountType);
+            account.setAccountStatus(rs.getString(5).charAt(0));
             account.setAnnualInterestRate(rs.getInt(8));
 
             return account;
