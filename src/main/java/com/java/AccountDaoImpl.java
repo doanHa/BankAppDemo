@@ -76,7 +76,28 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
+    public Set<Account> getPendingAccounts() {
+        Set<Account> accounts = new HashSet<>();
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM ACCOUNT WHERE ACNT_STATUS = 'P'");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Account account = new AccountDaoImpl().extractAccountFromResultSet(rs);
+                accounts.add(account);
+            }
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/*ignored*/}
+        }
+        return accounts;
+    }
+
+    @Override
     public boolean updateAccountStatus(Account account) {
+        boolean entryAdded = false;
         try {
             PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET ACNT_STATUS=? WHERE ACNT_NUMBER=?");
             stmt.setString(1, String.valueOf(account.getAccountStatus()));
@@ -86,7 +107,7 @@ public class AccountDaoImpl implements AccountDao {
             con.commit();
 
             if(rowsAdded == 1) {
-                return true;
+                entryAdded = true;
             }
 
 
@@ -98,7 +119,7 @@ public class AccountDaoImpl implements AccountDao {
             } catch (SQLException e) {/*ignored*/}
         }
 
-        return false;
+        return entryAdded;
     }
 
 
@@ -223,7 +244,7 @@ public class AccountDaoImpl implements AccountDao {
         return entryAdded;
     }
 
-    public Account extractAccountFromResultSet(ResultSet rs) throws SQLException {
+    protected Account extractAccountFromResultSet(ResultSet rs) throws SQLException {
         //HACK: Implement Factory method pattern for Checking and Saving accounts
         char accountType = rs.getString(4).charAt(0);
         if (accountType == 'c') {

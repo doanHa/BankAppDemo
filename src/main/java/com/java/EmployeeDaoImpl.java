@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("Duplicates")
 public class EmployeeDaoImpl implements EmployeeDao {
     Connection con = DBUtil.getInstance();
     @Override
@@ -37,14 +39,25 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public Set<Account> getPendingAccounts() {
-        return null;
+    public Set<Employee> getNonAdminEmployees() {
+        Set<Employee> employees = new HashSet<>();
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM EMPLOYEE WHERE EMP_TYPE= 'Administrator'");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Employee employee = extractEmployeeFromResultSet(rs);
+                employees.add(employee);
+            }
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/*ignored*/}
+        }
+        return employees;
     }
 
-    @Override
-    public boolean updateAccountStatus(Account account) {
-        return false;
-    }
 
     private Employee extractEmployeeFromResultSet(ResultSet rs) throws SQLException {
 
