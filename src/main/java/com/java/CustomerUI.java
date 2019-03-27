@@ -237,6 +237,19 @@ public class CustomerUI extends UserUI {
 		System.out.println("Please enter the amount you want to withdraw: ");
 		String amountToWithdraw = getInput();
 		System.out.println("Please wait a minute!");
+		AccountDaoImpl accountConnection = new AccountDaoImpl();
+		Account temp = null;
+		try {
+			int accNumberWithdraw = Integer.parseInt(accNumWithdraw);
+			temp = accountConnection.getAccountByAccountNumber(accNumberWithdraw);
+		} catch (NumberFormatException numFEx) {
+			System.out.println("Invalid account number");
+		}
+		if (temp == null) {
+			System.out.println("No such account exist");
+		} else {
+			
+		}
 		System.out.println("All Done!");
 		showCustomerActionMenu(customer);
 	}
@@ -255,7 +268,6 @@ public class CustomerUI extends UserUI {
 		System.out.println("Please wait a minute!");
 		System.out.println("All Done!");
 		showCustomerActionMenu(customer);
-
 	}
 
 	private static Set<Account> getAllAccountForCustomer(Customer customer) {
