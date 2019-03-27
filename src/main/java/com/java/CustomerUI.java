@@ -238,6 +238,10 @@ public class CustomerUI extends UserUI {
 			showCustomerActionMenu(customer);
 			return;
 		}
+		if(temp.getAccountStatus() == 'P')
+			System.out.println("Your Account Is Not Approved Yet");
+		else if(temp.getAccountStatus() == 'D')
+			System.out.println("You Account Was Denied");
 		validInput = false;
 		double amountToDeposit = 0;
 		do {

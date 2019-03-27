@@ -23,7 +23,26 @@ public class EmployeeUI extends UserUI{
 	}
 	protected static void showEmployeeActionMenu(Employee temp) {
 		System.out.println("What work wouldl you like to complete today?");
-		System.out.println();
+		System.out.println("1. Approve/Deny Account");
+		System.out.println("2. Show Customer Account Information");
+		System.out.println("3. Show Customer Account Balances");
+		System.out.println("4. Show Customer Personal Information");
+		System.out.println("7. Log Out");
+		
+	}
+	private static void takeCustomerActionInput(Customer customer) {
+		String actionInput = null;
+		boolean validInput = false;
+		// TODO add to log each user choice here.
+		do {
+			actionInput = getInput();
+			switch (actionInput) {
+			case "8":
+				showMainMenu();
+			default:
+				System.out.println("Please enter a valid option (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)");
+			}
+		} while (!validInput);
 	}
 
 }
