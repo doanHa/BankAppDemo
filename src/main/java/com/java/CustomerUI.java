@@ -153,6 +153,8 @@ public class CustomerUI extends UserUI {
 				System.out.println("Please enter a valid input (Y/N)");
 			}
 		} while (!validInput);
+		// TODO implement this part.
+
 		System.out.println("All done!");
 
 	}
@@ -160,12 +162,30 @@ public class CustomerUI extends UserUI {
 	private static void showCustomerAccountInfo(Customer customer) {
 		// TODO implement this
 		System.out.println("Your Account Infomation Is As Followed: ");
-
+		Set<Account> customerAccounts = getAllAccountForCustomer(customer);
+		Iterator<Account> accountIterator = customerAccounts.iterator();
+		while (accountIterator.hasNext()) {
+			Account account = accountIterator.next();
+			System.out.println("|Account Number       |");
+			System.out.println("|Routing Number       |");
+			System.out.println("|Account Type         |");
+			System.out.println("|Joint                |");
+			System.out.println("|Account Limit        |");
+			System.out.println("|Annual Interest Rate |");
+			System.out.println("|Account Status       |");
+		}
 	}
 
 	private static void showCustomerAccountBalance(Customer customer) {
 		// TODO implement this
-
+		System.out.println("Your Account Balances Are As Followed: ");
+		Set<Account> customerAccounts = getAllAccountForCustomer(customer);
+		Iterator<Account> accountIterator = customerAccounts.iterator();
+		while (accountIterator.hasNext()) {
+			Account account = accountIterator.next();
+			System.out.println("|Account Number       |");
+			System.out.println("|Account Balances     |");
+		}
 	}
 
 	private static void showCustomerPersonalInfo(Customer customer) {
