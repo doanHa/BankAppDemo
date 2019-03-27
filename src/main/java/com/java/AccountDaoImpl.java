@@ -207,7 +207,8 @@ public class AccountDaoImpl implements AccountDao {
     public boolean insertBankAccount(Customer customer, int routingNumber, char accountType, char joint,
                                      int jointCust_id) {
         boolean entryAdded = false;
-        int rowsAdded = 0;
+        int row1Added = 0;
+        int row2Added = 0;
         try {
             CallableStatement cstmt = con.prepareCall("{CALL INSERT_ACCOUNT(?, ?, ?, ?)}");
             cstmt.registerOutParameter(1, Types.INTEGER);
@@ -218,19 +219,17 @@ public class AccountDaoImpl implements AccountDao {
             int acnt_number = cstmt.getInt(1);
 
             if(joint == 'N') {
-                rowsAdded = insertCustomerAccount(customer.getCustomerID(), acnt_number);
-                if (rowsAdded == 1) {
+                row1Added = insertCustomerAccount(customer.getCustomerID(), acnt_number);
+                if (row1Added == 1) {
                     entryAdded = true;
                 }
             } else {
-                rowsAdded += insertCustomerAccount(customer.getCustomerID(), acnt_number);
-                rowsAdded += insertCustomerAccount(jointCust_id, acnt_number);
-                if (rowsAdded == 2) {
+                row1Added = insertCustomerAccount(customer.getCustomerID(), acnt_number);
+                row2Added = insertCustomerAccount(jointCust_id, acnt_number);
+                if ((row1Added + row2Added) == 2) {
                     entryAdded = true;
                 }
             }
-
-
         } catch (SQLException e) {
             System.out.println("Unable to connect please try again later1.");
         } finally {
