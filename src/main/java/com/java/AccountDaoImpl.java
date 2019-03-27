@@ -129,10 +129,12 @@ public class AccountDaoImpl implements AccountDao {
     public boolean updateAccountBalance(Account account) {
         boolean entryAdded = false;
         try {
+        	System.out.println("________________________---1");
             PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET BALANCE =? WHERE ACNT_NUMBER=?");
+            System.out.println("________________________---2");
             stmt.setDouble(1, account.getBalances());
+            System.out.println("________________________---3");
             stmt.setInt(2, account.getAccountNumber());
-
             int rowsAdded = stmt.executeUpdate();
             con.commit();
 

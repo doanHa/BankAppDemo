@@ -231,6 +231,8 @@ public class CustomerUI extends UserUI {
 			}
 		} while (!validInput);
 		Account temp = accountConnection.getAccountByAccountNumber(accNumberDeposit);
+		System.out.println("1.");
+		System.out.println(temp);
 		if (temp == null) {
 			System.out.println("Could Not Get Account Information.");
 			showCustomerActionMenu(customer);
@@ -249,7 +251,9 @@ public class CustomerUI extends UserUI {
 		} while (!validInput);
 		
 		temp.deposit(amountToDeposit);
-		accountConnection.updateAccountBalance(temp);
+		System.out.println("2.");
+		System.out.println(temp);
+		System.out.println(accountConnection.updateAccountBalance(temp));
 		System.out.println("All Done!");
 		showCustomerActionMenu(customer);
 	}

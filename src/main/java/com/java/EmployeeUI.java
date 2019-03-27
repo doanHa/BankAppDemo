@@ -22,7 +22,8 @@ public class EmployeeUI extends UserUI{
 
 	}
 	protected static void showEmployeeActionMenu(Employee temp) {
-		
+		System.out.println("What work wouldl you like to complete today?");
+		System.out.println();
 	}
 
 }
