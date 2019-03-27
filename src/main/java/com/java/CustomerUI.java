@@ -1,5 +1,9 @@
 package com.java;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 public class CustomerUI extends UserUI {
 	private static CustomerDaoImpl customerConnection;
 
@@ -148,27 +152,78 @@ public class CustomerUI extends UserUI {
 	private static void showDepositMenu(Customer customer) {
 		// TODO implements this
 		System.out.println("Here is a list of your account: ");
-		getAllAccountForCustomer(customer);
-		System.out.println("Please enter an account number to deposit: ");
+		showAllAccountForCustomer(customer);
+		System.out.println("<----------------------------------------------------->");
 		System.out.println("Reminder: If you want to deposit into an account that is not yours,\n\tPlease provide the receiving account number!");
+		System.out.println("Please enter an account number to deposit: ");
+		String accNumDeposit = getInput();
+		System.out.println("Please enter the amount you want to deposit: ");
+		String amountToDeposit = getInput();
+		System.out.println("Please wait a minute!");
+		System.out.println("All Done!");
+		showCustomerActionMenu(customer);
 	}
 
 	private static void showWithdrawMenu(Customer customer) {
 		// TODO implement this
 		System.out.println("Here is a list of your account: ");
-		getAllAccountForCustomer(customer);
+		showAllAccountForCustomer(customer);
+		System.out.println("<----------------------------------------------------->");
+		System.out.println("Reminder: You can only withdraw from your own account!");		
 		System.out.println("Please enter an accoun number to withdraw: ");
-		System.out.println("Reminder: You can only withdraw from your own account!");
+		String accNumWithdraw = getInput();
+		System.out.println("Please enter the amount you want to withdraw: ");
+		String amountToWithdraw = getInput();
+		System.out.println("Please wait a minute!");
+		System.out.println("All Done!");
+		showCustomerActionMenu(customer);
 	}
 
 	private static void showTransferMenu(Customer customer) {
 		// TODO implement this
 		System.out.println("Here Is A List Of Your Account: ");
-		getAllAccountForCustomer(customer);
+		showAllAccountForCustomer(customer);
+		System.out.println("<----------------------------------------------------->");
+		System.out.println("Reminder: You can only transfer between your own account!");		
 		System.out.println("Please Enter An Account Number To Transfer From: ");
-
+		String accNumTransferFrom = getInput();
+		System.out.println("Please Enter An AccountNumber To Transfer To: ");
+		String accNumTransferTo = getInput();
+		System.out.println("Please Enter The Ammount To Transfer: ");
+		String amountToTransfer = getInput();
+		System.out.println("Please wait a minute!");
+		System.out.println("All Done!");
+		showCustomerActionMenu(customer);
+		
 	}
-	private static void getAllAccountForCustomer(Customer customer) {
+	private static Set<Account> getAllAccountForCustomer(Customer customer) {
 		// TODO implement this
+		Set<Account> test = new HashSet<Account>();
+		for(int i = 0;i<5;i++) {
+			Account temp = new CheckingAccount();
+			temp.setAccountNumber(i);
+			temp.setBalances(10000*i+100);
+			test.add(temp);
+		}
+		for(int i = 6;i<10;i++) {
+			Account temp = new SavingAccount();
+			temp.setAccountNumber(i);
+			temp.setBalances(10000*i+100);
+			test.add(temp);
+		}
+		return test;
+	}
+	private static void showAllAccountForCustomer(Customer customer) {
+		Set<Account> test = getAllAccountForCustomer(customer);
+		int x = 1;
+		Iterator<Account> customerAccounts = test.iterator();
+		while(customerAccounts.hasNext()) {
+			Account temp = customerAccounts.next();
+			if(temp instanceof CheckingAccount)
+				System.out.println("Checking account " + x + " Account Number is " + temp.getAccountNumber() + " Account balances is " + temp.getBalances());
+			else
+				System.out.println("Saving Account " + x + " Account Number is " + temp.getAccountNumber() + " Account balances is " + temp.getBalances());
+			x++;
+		}
 	}
 }
