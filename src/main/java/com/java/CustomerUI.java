@@ -37,6 +37,7 @@ public class CustomerUI extends UserUI {
 		// TODO afterward, take them to the main menu and ask for input
 		customerConnection = new CustomerDaoImpl();
 		Customer temp = new Customer();
+		temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
 		temp = temp.register(firstNameInput, lastNameInput, usernameInput, passwordInput, emailInput);
 		if (customerConnection.insertCustomer(temp)) {
 			System.out.println(
