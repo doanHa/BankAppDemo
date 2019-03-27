@@ -89,7 +89,7 @@ public class CustomerUI extends UserUI {
 			actionInput = getInput();
 			switch (actionInput) {
 			case "1":
-				applyForAccount();
+				applyForAccount(customer);
 				validInput = true;
 				break;
 			case "2":
@@ -124,7 +124,7 @@ public class CustomerUI extends UserUI {
 		} while (!validInput);
 	}
 
-	private static void applyForAccount() {
+	private static void applyForAccount(Customer customer) {
 		// TODO Implement this
 		int[] routingNumber = new int[3];
 		routingNumber[0] = 1001000;
@@ -133,18 +133,25 @@ public class CustomerUI extends UserUI {
 		int accountRoutingNumber = (int) (Math.random() * 3);
 		System.out.println("Please Answer The Following Questions");
 		System.out.println("Would you like to create a checking or saving account? (Checking/Saving)");
-		String first_name = getInput();
+		String account_type = getInput();
 		System.out.println("Would you like this to be a joint account? (Y/N)");
 		String joint = null;
 		boolean validInput = false;
-		String joint_customer_id = null;
+		int joint_customer_id = 0;
 		do {
 			joint = getInput();
 			switch (joint) {
 			case "Y":
-				validInput = true;
-				System.out.println("Please Enter Your First Name: ");
-				joint_customer_id = getInput();
+				System.out.println("Please Enter Your Joint Partner User ID: ");
+				do {
+					try {
+						joint_customer_id = Integer.parseInt(getInput());
+						validInput = true;
+					}catch(NumberFormatException nunFEx) {
+						System.out.println("Incorrect Input");
+					}
+				}while(!validInput);
+
 				break;
 			case "N":
 				validInput = true;
@@ -154,7 +161,8 @@ public class CustomerUI extends UserUI {
 			}
 		} while (!validInput);
 		// TODO implement this part.
-
+		AccountDaoImpl accountConn = new AccountDaoImpl();
+		accountConn.insertBankAccount(customer, routingNumber[accountRoutingNumber], account_type.charAt(0), joint.charAt(0), joint_customer_id);
 		System.out.println("All done!");
 
 	}
@@ -166,14 +174,16 @@ public class CustomerUI extends UserUI {
 		Iterator<Account> accountIterator = customerAccounts.iterator();
 		while (accountIterator.hasNext()) {
 			Account account = accountIterator.next();
-			System.out.println("|Account Number       |");
-			System.out.println("|Routing Number       |");
-			System.out.println("|Account Type         |");
-			System.out.println("|Joint                |");
-			System.out.println("|Account Limit        |");
-			System.out.println("|Annual Interest Rate |");
-			System.out.println("|Account Status       |");
+			System.out.println("|Account Number       |" + account.getAccountNumber());
+			System.out.println("|Routing Number       |" + account.getRoutingNumber());
+			System.out.println("|Account Type         |" + account.getAccountType());
+			System.out.println("|Account Limit        |" + account.getAccountLimit());
+			if (account instanceof SavingAccount)
+				System.out.println("|Annual Interest Rate |" + ((SavingAccount) account).getAnnualInterestRate());
+			System.out.println("|Account Status       |" + account.getAccountStatus());
+			System.out.println("----------------------");
 		}
+		showCustomerActionMenu(customer);
 	}
 
 	private static void showCustomerAccountBalance(Customer customer) {
@@ -183,9 +193,11 @@ public class CustomerUI extends UserUI {
 		Iterator<Account> accountIterator = customerAccounts.iterator();
 		while (accountIterator.hasNext()) {
 			Account account = accountIterator.next();
-			System.out.println("|Account Number       |");
-			System.out.println("|Account Balances     |");
+			System.out.println("|Account Number       |" + account.getAccountNumber());
+			System.out.println("|Account Balances     |" + account.getBalances());
+			System.out.println("----------------------");
 		}
+		showCustomerActionMenu(customer);
 	}
 
 	private static void showCustomerPersonalInfo(Customer customer) {
@@ -206,22 +218,34 @@ public class CustomerUI extends UserUI {
 		System.out.println(
 				"Reminder: If you want to deposit into an account that is not yours,\n\tPlease provide the receiving account number!");
 		System.out.println("Please enter an account number to deposit: ");
-		String accNumDeposit = getInput();
-		System.out.println("Please enter the amount you want to deposit: ");
-		String amountToDeposit = getInput();
-		System.out.println("Please wait a minute!");
+		int accNumberDeposit = 0;
 		AccountDaoImpl accountConnection = new AccountDaoImpl();
-		Account temp = null;
-		try {
-			int accNumberDeposit = Integer.parseInt(accNumDeposit);
-			temp = accountConnection.getAccountByAccountNumber(accNumberDeposit);
-		} catch (NumberFormatException numFEx) {
-			System.out.println("Invalid account number");
-		}
+		boolean validInput = false;
+		do {
+			try {
+				accNumberDeposit = Integer.parseInt(getInput());
+				validInput = true;
+			} catch (NumberFormatException numFEx) {
+				System.out.println("Invalid account number");
+			}
+		} while (!validInput);
+		Account temp = accountConnection.getAccountByAccountNumber(accNumberDeposit);
 		if (temp == null) {
-			System.out.println("No such account exist");
+			System.out.println("Could Not Get Account Information.");
 		}
-
+		System.out.println("Please enter the amount you want to deposit: ");
+		validInput = false;
+		double amountToDeposit = 0;
+		do {
+			try {
+				amountToDeposit = Double.parseDouble(getInput());
+				validInput = true;
+			} catch (NumberFormatException numFEx) {
+				System.out.println("Invalid input. Please only put in numbers");
+			}
+		} while (!validInput);
+		temp.deposit(amountToDeposit);
+		accountConnection.updateAccountBalance(temp);
 		System.out.println("All Done!");
 		showCustomerActionMenu(customer);
 	}
@@ -248,7 +272,7 @@ public class CustomerUI extends UserUI {
 		if (temp == null) {
 			System.out.println("No such account exist");
 		} else {
-			
+
 		}
 		System.out.println("All Done!");
 		showCustomerActionMenu(customer);
