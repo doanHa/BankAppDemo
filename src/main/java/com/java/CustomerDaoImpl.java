@@ -8,11 +8,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CustomerDaoImpl implements CustomerDao {
-	private Connection con = DBUtil.getInstance();
+	private Connection con;
 
 	@Override
 	public boolean getCustomerByLogin(String login) {
 		boolean validLogin = false;
+		con = DBUtil.getInstance();
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE login=?");
 			stmt.setString(1, login);
@@ -38,6 +39,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
 	@Override
 	public Customer getCustomerByPassword(String password) {
+		con = DBUtil.getInstance();
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE password_text=?");
 			stmt.setString(1, password);
@@ -63,7 +65,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
 	@Override
 	public Customer getCustomerByLoginAndPassword(String login, String password) {
-
+		con = DBUtil.getInstance();
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE login=? AND password_text=?");
 			stmt.setString(1, login);
@@ -91,7 +93,7 @@ public class CustomerDaoImpl implements CustomerDao {
 
 	@Override
 	public Customer getCustomerByID(int id) {
-
+		con = DBUtil.getInstance();
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer WHERE cust_id=" + id);
 			ResultSet rs = stmt.executeQuery();
@@ -117,7 +119,7 @@ public class CustomerDaoImpl implements CustomerDao {
 	@Override
 	public Set<Customer> getAllCustomers() {
 		Set<Customer> customers = new HashSet<>();
-
+		con = DBUtil.getInstance();
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer");
 			ResultSet rs = stmt.executeQuery();
@@ -145,6 +147,7 @@ public class CustomerDaoImpl implements CustomerDao {
 	@Override
 	public boolean insertCustomer(Customer customer) {
 		boolean entryAdded = false;
+		con = DBUtil.getInstance();
 		try {
 			PreparedStatement stmt = con.prepareStatement("INSERT INTO Customer (last_name, first_name, "
 					+ "email, login, password_text) values (?, ?, ?, ?, ?)");

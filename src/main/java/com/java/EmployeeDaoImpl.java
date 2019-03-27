@@ -9,9 +9,10 @@ import java.util.Set;
 
 @SuppressWarnings("Duplicates")
 public class EmployeeDaoImpl implements EmployeeDao {
-    Connection con = DBUtil.getInstance();
+    private Connection con;
     @Override
     public Employee getEmployeeByLoginAndPassword(String login, String password) {
+        con = DBUtil.getInstance();
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM Employee WHERE login=? AND password_text=?");
             stmt.setString(1, login);
@@ -41,6 +42,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     @Override
     public Set<Employee> getNonAdminEmployees() {
         Set<Employee> employees = new HashSet<>();
+        con = DBUtil.getInstance();
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM EMPLOYEE WHERE EMP_TYPE= 'Administrator'");
             ResultSet rs = stmt.executeQuery();
