@@ -164,7 +164,7 @@ public class CustomerUI extends UserUI {
 		AccountDaoImpl accountConn = new AccountDaoImpl();
 		accountConn.insertBankAccount(customer, routingNumber[accountRoutingNumber], account_type.charAt(0), joint.charAt(0), joint_customer_id);
 		System.out.println("All done!");
-
+		showCustomerActionMenu(customer);
 	}
 
 	private static void showCustomerAccountInfo(Customer customer) {
