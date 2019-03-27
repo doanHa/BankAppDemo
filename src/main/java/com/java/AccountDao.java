@@ -10,7 +10,7 @@ public interface AccountDao {
    boolean updateAccountStatus(Account account);
    boolean updateAccountBalance(Account account);
    boolean updateAccountLimit(Account account);
-   boolean updateAccountAnnualInterestRate(Account account);
+   boolean updateAccountAnnualInterestRate(SavingAccount account);
    boolean insertBankAccount(Customer customer, int routingNumber, char accountType, char joint, int cust_id);
 
 

@@ -1,9 +1,6 @@
 package com.java;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -107,6 +104,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public boolean updateAccountBalance(Account account) {
+        boolean entryAdded = false;
         try {
             PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET BALANCE WHERE ACNT_NUMBER=?");
             stmt.setDouble(1, account.getBalances());
@@ -116,7 +114,7 @@ public class AccountDaoImpl implements AccountDao {
             con.commit();
 
             if(rowsAdded == 1) {
-                return true;
+                entryAdded = true;
             }
 
 
@@ -128,34 +126,91 @@ public class AccountDaoImpl implements AccountDao {
             } catch (SQLException e) {/*ignored*/}
         }
 
-        return false;
+        return entryAdded;
     }
 
     @Override
     public boolean updateAccountLimit(Account account) {
-        return false;
+        boolean entryAdded = false;
+        try {
+            PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET ACNT_LIMIT=? WHERE ACNT_NUMBER=?");
+            stmt.setDouble(1, account.getAccountLimit());
+            stmt.setInt(2, account.getAccountNumber());
+
+            int rowsAdded = stmt.executeUpdate();
+            con.commit();
+
+            if(rowsAdded == 1) {
+                entryAdded = true;
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/*ignored*/}
+        }
+
+        return entryAdded;
     }
 
     @Override
-    public boolean updateAccountAnnualInterestRate(Account account) {
-        return false;
+    public boolean updateAccountAnnualInterestRate(SavingAccount account) {
+        boolean entryAdded = false;
+        try {
+            PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET AN_INT_RATE=? WHERE ACNT_NUMBER=?");
+            stmt.setInt(1, (int)account.getAnnualInterestRate());
+            stmt.setInt(2, account.getAccountNumber());
+
+            int rowsAdded = stmt.executeUpdate();
+            con.commit();
+
+            if(rowsAdded == 1) {
+                entryAdded = true;
+            }
+
+
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            if (con != null) try {
+                con.close();
+            } catch (SQLException e) {/*ignored*/}
+        }
+
+        return entryAdded;
     }
 
     @Override
     public boolean insertBankAccount(Customer customer, int routingNumber, char accountType, char joint,
                                      int jointCust_id) {
-        //HACK: on insert to Account, need to also do an additional insert to add CUST_ID & ACNT_NUMBER to
-        // CUSTOMERACCOUNT
+        boolean entryAdded = false;
+        int rowsAdded = 0;
         try {
-            PreparedStatement stmtAccount = con.prepareStatement("");
+            CallableStatement cstmt = con.prepareCall("{CALL INSERT_ACCOUNT(?, ?, ?, ?)}");
+            cstmt.registerOutParameter(1, Types.INTEGER);
+            cstmt.setDouble(2,routingNumber);
+            cstmt.setString(3, String.valueOf(accountType));
+            cstmt.setString(4, String.valueOf(joint));;
+            cstmt.execute();
+            int acnt_number = cstmt.getInt(1);
 
-            stmtAccount.setInt(1, routingNumber);
-            stmtAccount.setString(2, String.valueOf(accountType));
-            stmtAccount.setString(3, String.valueOf(joint));
+            if(joint == 'N') {
+                rowsAdded = insertCustomerAccount(acnt_number, customer.getCustomerID());
+                if (rowsAdded == 1) {
+                    entryAdded = true;
+                }
+            } else {
+                rowsAdded += insertCustomerAccount(acnt_number, customer.getCustomerID());
+                rowsAdded += insertCustomerAccount(acnt_number, jointCust_id);
+                if (rowsAdded == 2) {
+                    entryAdded = true;
+                }
+            }
 
 
-            PreparedStatement stmtCustomerAccount = con.prepareStatement("INSERT INTO CUSTOMERACCOUNT (CUST_ID, " +
-                    "ACNT_NUMBER) VALUES (?, ?)");
         } catch (SQLException e) {
             System.out.println("Unable to connect please try again later.");
         } finally {
@@ -165,7 +220,7 @@ public class AccountDaoImpl implements AccountDao {
                 } catch (SQLException e) {/*ignored*/}
             }
         }
-        return false;
+        return entryAdded;
     }
 
     public Account extractAccountFromResultSet(ResultSet rs) throws SQLException {
@@ -191,5 +246,29 @@ public class AccountDaoImpl implements AccountDao {
         }
 
 
+    }
+
+    private int insertCustomerAccount(int cust_id, int acnt_number) {
+        int rowsAdded = 0;
+        try {
+            PreparedStatement stmtCustomerAccount = con.prepareStatement("INSERT INTO CUSTOMERACCOUNT (CUST_ID, " +
+                    "ACNT_NUMBER) VALUES (?, ?)");
+
+            stmtCustomerAccount.setInt(1, cust_id);
+            stmtCustomerAccount.setInt(2, acnt_number);
+
+            rowsAdded = stmtCustomerAccount.executeUpdate();
+            con.commit();
+
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later.");
+        } finally {
+            {
+                if(con != null) try {
+                    con.close();
+                } catch (SQLException e) {/*ignored*/}
+            }
+        }
+        return rowsAdded;
     }
 }
