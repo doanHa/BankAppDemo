@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@SuppressWarnings("Duplicates")
 public class AccountDaoImpl implements AccountDao {
     Connection con = DBUtil.getInstance();
 

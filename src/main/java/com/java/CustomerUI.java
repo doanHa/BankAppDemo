@@ -232,6 +232,8 @@ public class CustomerUI extends UserUI {
 		Account temp = accountConnection.getAccountByAccountNumber(accNumberDeposit);
 		if (temp == null) {
 			System.out.println("Could Not Get Account Information.");
+			showCustomerActionMenu(customer);
+			return;
 		}
 		System.out.println("Please enter the amount you want to deposit: ");
 		validInput = false;
