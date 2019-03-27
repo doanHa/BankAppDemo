@@ -12,7 +12,6 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public Account getAccountByAccountNumber(int accountNumber) {
-
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM ACCOUNT WHERE ACNT_NUMBER =" + accountNumber);
             ResultSet rs = stmt.executeQuery();
@@ -219,13 +218,13 @@ public class AccountDaoImpl implements AccountDao {
             int acnt_number = cstmt.getInt(1);
 
             if(joint == 'N') {
-                rowsAdded = insertCustomerAccount(acnt_number, customer.getCustomerID());
+                rowsAdded = insertCustomerAccount(customer.getCustomerID(), acnt_number);
                 if (rowsAdded == 1) {
                     entryAdded = true;
                 }
             } else {
-                rowsAdded += insertCustomerAccount(acnt_number, customer.getCustomerID());
-                rowsAdded += insertCustomerAccount(acnt_number, jointCust_id);
+                rowsAdded += insertCustomerAccount(customer.getCustomerID(), acnt_number);
+                rowsAdded += insertCustomerAccount(jointCust_id, acnt_number);
                 if (rowsAdded == 2) {
                     entryAdded = true;
                 }
@@ -233,7 +232,7 @@ public class AccountDaoImpl implements AccountDao {
 
 
         } catch (SQLException e) {
-            System.out.println("Unable to connect please try again later.");
+            System.out.println("Unable to connect please try again later1.");
         } finally {
             {
                 if(con != null) try {
@@ -284,7 +283,7 @@ public class AccountDaoImpl implements AccountDao {
             con.commit();
 
         } catch (SQLException e) {
-            System.out.println("Unable to connect please try again later.");
+            System.out.println("Unable to connect please try again later2.");
         } finally {
             {
                 if(con != null) try {
