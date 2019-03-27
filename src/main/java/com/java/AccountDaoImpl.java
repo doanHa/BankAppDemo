@@ -117,7 +117,7 @@ public class AccountDaoImpl implements AccountDao {
 
 
         } catch (SQLException e) {
-            System.out.println("Unable to connect please try again later.");
+            System.out.println("1.Unable to connect please try again later.");
         } finally {
             if (con != null) try {
                 con.close();
@@ -173,7 +173,7 @@ public class AccountDaoImpl implements AccountDao {
 
 
         } catch (SQLException e) {
-            System.out.println("Unable to connect please try again later.");
+            System.out.println("2.Unable to connect please try again later.");
         } finally {
             if (con != null) try {
                 con.close();
@@ -194,14 +194,13 @@ public class AccountDaoImpl implements AccountDao {
 
             int rowsAdded = stmt.executeUpdate();
             con.commit();
-
+            
             if(rowsAdded == 1) {
                 entryAdded = true;
             }
 
-
         } catch (SQLException e) {
-            System.out.println("Unable to connect please try again later.");
+            //System.out.println("Unable to connect please try again later.");
         } finally {
             if (con != null) try {
                 con.close();

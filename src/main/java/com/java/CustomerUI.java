@@ -148,10 +148,10 @@ public class CustomerUI extends UserUI {
 					try {
 						joint_customer_id = Integer.parseInt(getInput());
 						validInput = true;
-					}catch(NumberFormatException nunFEx) {
+					} catch (NumberFormatException nunFEx) {
 						System.out.println("Incorrect Input");
 					}
-				}while(!validInput);
+				} while (!validInput);
 
 				break;
 			case "N":
@@ -163,7 +163,8 @@ public class CustomerUI extends UserUI {
 		} while (!validInput);
 		// TODO implement this part.
 		AccountDaoImpl accountConn = new AccountDaoImpl();
-		accountConn.insertBankAccount(customer, routingNumber[accountRoutingNumber], account_type.charAt(0), joint.charAt(0), joint_customer_id);
+		accountConn.insertBankAccount(customer, routingNumber[accountRoutingNumber], account_type.charAt(0),
+				joint.charAt(0), joint_customer_id);
 		System.out.println("All done!");
 		showCustomerActionMenu(customer);
 	}
@@ -231,34 +232,37 @@ public class CustomerUI extends UserUI {
 			}
 		} while (!validInput);
 		Account temp = accountConnection.getAccountByAccountNumber(accNumberDeposit);
-		System.out.println("1.");
-		System.out.println(temp);
+
 		if (temp == null) {
 			System.out.println("Could Not Get Account Information.");
 			showCustomerActionMenu(customer);
 			return;
 		}
-		if(temp.getAccountStatus() == 'P')
+		if (temp.getAccountStatus() == 'P')
 			System.out.println("Your Account Is Not Approved Yet");
-		else if(temp.getAccountStatus() == 'D')
+		else if (temp.getAccountStatus() == 'D')
 			System.out.println("You Account Was Denied");
-		validInput = false;
-		double amountToDeposit = 0;
-		do {
-			try {
-				System.out.println("Please enter the amount you want to deposit: ");
-				amountToDeposit = Double.parseDouble(getInput());
-				validInput = true;
-			} catch (NumberFormatException numFEx) {
-				System.out.println("Invalid input. Please only put in numbers");
+		else if (temp.getAccountStatus() == 'C')
+			System.out.println("Your Account Was Closed");
+		else {
+			validInput = false;
+			double amountToDeposit = 0;
+			do {
+				try {
+					System.out.println("Please enter the amount you want to deposit: ");
+					amountToDeposit = Double.parseDouble(getInput());
+					validInput = true;
+				} catch (NumberFormatException numFEx) {
+					System.out.println("Invalid input. Please only put in numbers");
+				}
+			} while (!validInput);
+
+			temp.deposit(amountToDeposit);
+
+			if (accountConnection.updateAccountBalance(temp)) {
+				System.out.println("All Done!");
 			}
-		} while (!validInput);
-		
-		temp.deposit(amountToDeposit);
-		System.out.println("2.");
-		System.out.println(temp);
-		System.out.println(accountConnection.updateAccountBalance(temp));
-		System.out.println("All Done!");
+		}
 		showCustomerActionMenu(customer);
 	}
 
@@ -274,19 +278,48 @@ public class CustomerUI extends UserUI {
 		String amountToWithdraw = getInput();
 		System.out.println("Please wait a minute!");
 		AccountDaoImpl accountConnection = new AccountDaoImpl();
-		Account temp = null;
-		try {
-			int accNumberWithdraw = Integer.parseInt(accNumWithdraw);
-			temp = accountConnection.getAccountByAccountNumber(accNumberWithdraw);
-		} catch (NumberFormatException numFEx) {
-			System.out.println("Invalid account number");
-		}
-		if (temp == null) {
-			System.out.println("No such account exist");
-		} else {
+		boolean validInput = false;
+		int accNumberWithdraw = 0;
+		do {
+			try {
+				accNumberWithdraw = Integer.parseInt(accNumWithdraw);
+			} catch (NumberFormatException numFEx) {
+				System.out.println("Invalid account number");
+			}
+		} while (!validInput);
 
+		Account temp = accountConnection.getAccountByAccountNumber(accNumberWithdraw);
+		if (temp == null) {
+			System.out.println("Could Not Get Account Information.");
+			showCustomerActionMenu(customer);
+			return;
 		}
-		System.out.println("All Done!");
+		if (temp.getAccountStatus() == 'P')
+			System.out.println("Your Account Is Not Approved Yet");
+		else if (temp.getAccountStatus() == 'D')
+			System.out.println("You Account Was Denied");
+		else if (temp.getAccountStatus() == 'C')
+			System.out.println("Your Account Was Closed");
+		else {
+			validInput = false;
+			double amountToDeposit = 0;
+			do {
+				try {
+					System.out.println("Please enter the amount you want to deposit: ");
+					amountToDeposit = Double.parseDouble(getInput());
+					validInput = true;
+				} catch (NumberFormatException numFEx) {
+					System.out.println("Invalid input. Please only put in numbers");
+				}
+			} while (!validInput);
+
+			temp.deposit(amountToDeposit);
+
+			if (accountConnection.updateAccountBalance(temp)) {
+				System.out.println("All Done!");
+			}
+		}
+		showCustomerActionMenu(customer);
 		showCustomerActionMenu(customer);
 	}
 
