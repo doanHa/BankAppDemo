@@ -166,13 +166,13 @@ public class CustomerUI extends UserUI {
 		Iterator<Account> accountIterator = customerAccounts.iterator();
 		while (accountIterator.hasNext()) {
 			Account account = accountIterator.next();
-			System.out.println("|Account Number       |");
-			System.out.println("|Routing Number       |");
-			System.out.println("|Account Type         |");
-			System.out.println("|Joint                |");
-			System.out.println("|Account Limit        |");
-			System.out.println("|Annual Interest Rate |");
-			System.out.println("|Account Status       |");
+			System.out.println("|Account Number       |" + account.getAccountNumber());
+			System.out.println("|Routing Number       |" + account.getRoutingNumber());
+			System.out.println("|Account Type         |" + account.getAccountType());
+			System.out.println("|Account Limit        |" + account.getAccountLimit());
+			if(account instanceof SavingAccount)
+				System.out.println("|Annual Interest Rate |" + ((SavingAccount)account).getAnnualInterestRate());
+			System.out.println("|Account Status       |" + account.getAccountStatus());
 		}
 	}
 
