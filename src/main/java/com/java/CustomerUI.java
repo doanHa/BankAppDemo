@@ -217,12 +217,12 @@ public class CustomerUI extends UserUI {
 		System.out.println("<----------------------------------------------------->");
 		System.out.println(
 				"Reminder: If you want to deposit into an account that is not yours,\n\tPlease provide the receiving account number!");
-		System.out.println("Please enter an account number to deposit: ");
 		int accNumberDeposit = 0;
 		AccountDaoImpl accountConnection = new AccountDaoImpl();
 		boolean validInput = false;
 		do {
 			try {
+				System.out.println("Please enter an account number to deposit: ");
 				accNumberDeposit = Integer.parseInt(getInput());
 				validInput = true;
 			} catch (NumberFormatException numFEx) {
@@ -235,17 +235,18 @@ public class CustomerUI extends UserUI {
 			showCustomerActionMenu(customer);
 			return;
 		}
-		System.out.println("Please enter the amount you want to deposit: ");
 		validInput = false;
 		double amountToDeposit = 0;
 		do {
 			try {
+				System.out.println("Please enter the amount you want to deposit: ");
 				amountToDeposit = Double.parseDouble(getInput());
 				validInput = true;
 			} catch (NumberFormatException numFEx) {
 				System.out.println("Invalid input. Please only put in numbers");
 			}
 		} while (!validInput);
+		
 		temp.deposit(amountToDeposit);
 		accountConnection.updateAccountBalance(temp);
 		System.out.println("All Done!");

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@SuppressWarnings("Duplicates")
 public class AccountDaoImpl implements AccountDao {
     Connection con = DBUtil.getInstance();
 
@@ -252,7 +251,7 @@ public class AccountDaoImpl implements AccountDao {
             account.setBalances(rs.getDouble(3));
             account.setAccountType(accountType);
             account.setAccountStatus(rs.getString(5).charAt(0));
-
+            account.setAccountLimit(rs.getDouble(7));
             return account;
         } else {
             SavingAccount account = new SavingAccount();
@@ -262,7 +261,7 @@ public class AccountDaoImpl implements AccountDao {
             account.setAccountType(accountType);
             account.setAccountStatus(rs.getString(5).charAt(0));
             account.setAnnualInterestRate(rs.getInt(8));
-
+            account.setAccountLimit(rs.getDouble(7));
             return account;
         }
 
