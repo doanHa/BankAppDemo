@@ -101,4 +101,16 @@ public abstract class Account{
 	public void setAccountStatus(char accountStatus) {
 		this.accountStatus = accountStatus;
 	}
+
+	@Override
+	public String toString() {
+		return "Account{" +
+				"accountNumber=" + accountNumber +
+				", routingNumber=" + routingNumber +
+				", balances=" + balances +
+				", accountType=" + accountType +
+				", accountLimit=" + accountLimit +
+				", accountStatus=" + accountStatus +
+				'}';
+	}
 }
