@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+@SuppressWarnings("Duplicates")
 public class AccountDaoImpl implements AccountDao {
     Connection con = DBUtil.getInstance();
 
@@ -125,7 +126,7 @@ public class AccountDaoImpl implements AccountDao {
     public boolean updateAccountBalance(Account account) {
         boolean entryAdded = false;
         try {
-            PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET BALANCE WHERE ACNT_NUMBER=?");
+            PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET BALANCE =? WHERE ACNT_NUMBER=?");
             stmt.setDouble(1, account.getBalances());
             stmt.setInt(2, account.getAccountNumber());
 
@@ -224,7 +225,7 @@ public class AccountDaoImpl implements AccountDao {
                 }
             } else {
                 row1Added = insertCustomerAccount(customer.getCustomerID(), acnt_number);
-                row2Added = insertCustomerAccount(jointCust_id, acnt_number);
+                row2Added = insertCustomerAccount2(jointCust_id, acnt_number);
                 if ((row1Added + row2Added) == 2) {
                     entryAdded = true;
                 }
@@ -282,6 +283,29 @@ public class AccountDaoImpl implements AccountDao {
 
         } catch (SQLException e) {
             System.out.println("Unable to connect please try again later2.");
+        } finally {
+            {
+                if(con != null) try {
+                    con.close();
+                } catch (SQLException e) {/*ignored*/}
+            }
+        }
+        return rowsAdded;
+    }
+    private int insertCustomerAccount2(int cust_id, int acnt_number) {
+        int rowsAdded = 0;
+        try {
+            PreparedStatement stmtCustomerAccount = con.prepareStatement("INSERT INTO CUSTOMERACCOUNT (CUST_ID, " +
+                    "ACNT_NUMBER) VALUES (?, ?)");
+
+            stmtCustomerAccount.setInt(1, cust_id);
+            stmtCustomerAccount.setInt(2, acnt_number);
+
+            rowsAdded = stmtCustomerAccount.executeUpdate();
+            con.commit();
+
+        } catch (SQLException e) {
+            System.out.println("Unable to connect please try again later3.");
         } finally {
             {
                 if(con != null) try {
