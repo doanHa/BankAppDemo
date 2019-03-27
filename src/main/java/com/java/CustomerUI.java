@@ -1,16 +1,11 @@
 package com.java;
 
-import org.apache.log4j.Logger;
-
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 public class CustomerUI extends UserUI {
 	private static CustomerDaoImpl customerConnection;
-	static Logger logger = Logger.getLogger(Bank.class.getName());
-	static Date date = new Date();
 
 	public CustomerUI(String input) {
 		switch (input) {
@@ -37,12 +32,19 @@ public class CustomerUI extends UserUI {
 		System.out.println("Please enter your email address");
 		String emailInput = getInput();
 		System.out.println("Please wait for your account to be registered");
+		// TODO insert an account into the table with above information.
+		// TODO then, display a message saying their account has been registered
+		// TODO afterward, take them to the main menu and ask for input
 		customerConnection = new CustomerDaoImpl();
 		Customer temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
 		if(temp == null) {
 			temp = new Customer();
 			temp = temp.register(firstNameInput, lastNameInput, usernameInput, passwordInput, emailInput);
-			logger.info("Customer account created for " + firstNameInput + " " + lastNameInput + " " + date);
+		}else
+		{
+			System.out.println("Username has been taken");
+			showMainMenu();
+			return;
 		}
 		if (customerConnection.insertCustomer(temp)) {
 			System.out.println(
@@ -50,7 +52,7 @@ public class CustomerUI extends UserUI {
 		} else {
 			System.out.println("Your account could not be registered at this time, please try again later");
 		}
-		logger.info("Customer account could not be created for " + firstNameInput + " " + lastNameInput + " " + date);
+		// TODO add to log file
 		UserUI.showMainMenu();
 	}
 
@@ -65,10 +67,10 @@ public class CustomerUI extends UserUI {
 		customerConnection = new CustomerDaoImpl();
 		Customer temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
 		if (temp == null) {
-			System.out.println("Incorrect input\n\n");
+			System.out.println("Incorrect input\n\n"); // TODO add to log file
 			UserUI.showMainMenu();
 		} else {
-			logger.info("Customer login sucessful for " + usernameInput);
+			// TODO add to log file
 			showCustomerActionMenu(temp);
 		}
 
@@ -82,8 +84,8 @@ public class CustomerUI extends UserUI {
 		System.out.println("4. Show Personal Infomation");
 		System.out.println("5. Deposit Money to an Account");
 		System.out.println("6. Withdraw Money to an Account");
-		System.out.println("7. Transfer Money to you Other Account");
-		System.out.println("8. Log Out");
+//		System.out.println("7. Transfer Money to you Other Account");
+		System.out.println("7. Log Out");
 		takeCustomerActionInput(customer);
 	}
 
@@ -118,14 +120,14 @@ public class CustomerUI extends UserUI {
 				showWithdrawMenu(customer);
 				validInput = true;
 				break;
+//			case "7":
+//				showTransferMenu(customer);
+//				validInput = true;
+//				break;
 			case "7":
-				showTransferMenu(customer);
-				validInput = true;
-				break;
-			case "8":
 				showMainMenu();
 			default:
-				System.out.println("Please enter a valid option (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)");
+				System.out.println("Please enter a valid option (1 | 2 | 3 | 4 | 5 | 6 | 7)");
 			}
 		} while (!validInput);
 	}
@@ -153,10 +155,10 @@ public class CustomerUI extends UserUI {
 					try {
 						joint_customer_id = Integer.parseInt(getInput());
 						validInput = true;
-					}catch(NumberFormatException nunFEx) {
+					} catch (NumberFormatException nunFEx) {
 						System.out.println("Incorrect Input");
 					}
-				}while(!validInput);
+				} while (!validInput);
 
 				break;
 			case "N":
@@ -168,7 +170,8 @@ public class CustomerUI extends UserUI {
 		} while (!validInput);
 		// TODO implement this part.
 		AccountDaoImpl accountConn = new AccountDaoImpl();
-		accountConn.insertBankAccount(customer, routingNumber[accountRoutingNumber], account_type.charAt(0), joint.charAt(0), joint_customer_id);
+		accountConn.insertBankAccount(customer, routingNumber[accountRoutingNumber], account_type.charAt(0),
+				joint.charAt(0), joint_customer_id);
 		System.out.println("All done!");
 		showCustomerActionMenu(customer);
 	}
@@ -236,34 +239,37 @@ public class CustomerUI extends UserUI {
 			}
 		} while (!validInput);
 		Account temp = accountConnection.getAccountByAccountNumber(accNumberDeposit);
-		System.out.println("1.");
-		System.out.println(temp);
+
 		if (temp == null) {
 			System.out.println("Could Not Get Account Information.");
 			showCustomerActionMenu(customer);
 			return;
 		}
-		if(temp.getAccountStatus() == 'P')
+		if (temp.getAccountStatus() == 'P')
 			System.out.println("Your Account Is Not Approved Yet");
-		else if(temp.getAccountStatus() == 'D')
+		else if (temp.getAccountStatus() == 'D')
 			System.out.println("You Account Was Denied");
-		validInput = false;
-		double amountToDeposit = 0;
-		do {
-			try {
-				System.out.println("Please enter the amount you want to deposit: ");
-				amountToDeposit = Double.parseDouble(getInput());
-				validInput = true;
-			} catch (NumberFormatException numFEx) {
-				System.out.println("Invalid input. Please only put in numbers");
+		else if (temp.getAccountStatus() == 'C')
+			System.out.println("Your Account Was Closed");
+		else {
+			validInput = false;
+			double amountToDeposit = 0;
+			do {
+				try {
+					System.out.println("Please enter the amount you want to deposit: ");
+					amountToDeposit = Double.parseDouble(getInput());
+					validInput = true;
+				} catch (NumberFormatException numFEx) {
+					System.out.println("Invalid input. Please only put in numbers");
+				}
+			} while (!validInput);
+
+			temp.deposit(amountToDeposit);
+
+			if (accountConnection.updateAccountBalance(temp)) {
+				System.out.println("All Done!");
 			}
-		} while (!validInput);
-		
-		temp.deposit(amountToDeposit);
-		System.out.println("2.");
-		System.out.println(temp);
-		System.out.println(accountConnection.updateAccountBalance(temp));
-		System.out.println("All Done!");
+		}
 		showCustomerActionMenu(customer);
 	}
 
@@ -274,42 +280,68 @@ public class CustomerUI extends UserUI {
 		System.out.println("<----------------------------------------------------->");
 		System.out.println("Reminder: You can only withdraw from your own account!");
 		System.out.println("Please enter an accoun number to withdraw: ");
-		String accNumWithdraw = getInput();
-		System.out.println("Please enter the amount you want to withdraw: ");
-		String amountToWithdraw = getInput();
-		System.out.println("Please wait a minute!");
+		int accNumberWithdraw = 0;
 		AccountDaoImpl accountConnection = new AccountDaoImpl();
-		Account temp = null;
-		try {
-			int accNumberWithdraw = Integer.parseInt(accNumWithdraw);
-			temp = accountConnection.getAccountByAccountNumber(accNumberWithdraw);
-		} catch (NumberFormatException numFEx) {
-			System.out.println("Invalid account number");
-		}
+		boolean validInput = false;
+		do {
+			try {
+				System.out.println("Please enter an account number to deposit: ");
+				accNumberWithdraw = Integer.parseInt(getInput());
+				validInput = true;
+			} catch (NumberFormatException numFEx) {
+				System.out.println("Invalid account number");
+			}
+		} while (!validInput);
+		Account temp = accountConnection.getAccountByAccountNumber(accNumberWithdraw);
+
 		if (temp == null) {
-			System.out.println("No such account exist");
-		} else {
-
+			System.out.println("Could Not Get Account Information.");
+			showCustomerActionMenu(customer);
+			return;
 		}
-		System.out.println("All Done!");
+		if (temp.getAccountStatus() == 'P')
+			System.out.println("Your Account Is Not Approved Yet");
+		else if (temp.getAccountStatus() == 'D')
+			System.out.println("You Account Was Denied");
+		else if (temp.getAccountStatus() == 'C')
+			System.out.println("Your Account Was Closed");
+		else {
+			validInput = false;
+			double amountToWithdraw = 0;
+			do {
+				try {
+					System.out.println("Please enter the amount you want to deposit: ");
+					amountToWithdraw = Double.parseDouble(getInput());
+					validInput = true;
+				} catch (NumberFormatException numFEx) {
+					System.out.println("Invalid input. Please only put in numbers");
+				}
+			} while (!validInput);
+
+			temp.withdraw(amountToWithdraw);
+
+			if (accountConnection.updateAccountBalance(temp)) {
+				System.out.println("All Done!");
+			}
+		}
 		showCustomerActionMenu(customer);
 	}
 
-	private static void showTransferMenu(Customer customer) {
-		System.out.println("Here Is A List Of Your Account: ");
-		showAllAccountForCustomer(customer);
-		System.out.println("<----------------------------------------------------->");
-		System.out.println("Reminder: You can only transfer between your own account!");
-		System.out.println("Please Enter An Account Number To Transfer From: ");
-		String accNumTransferFrom = getInput();
-		System.out.println("Please Enter An AccountNumber To Transfer To: ");
-		String accNumTransferTo = getInput();
-		System.out.println("Please Enter The Ammount To Transfer: ");
-		String amountToTransfer = getInput();
-		System.out.println("Please wait a minute!");
-		System.out.println("All Done!");
-		showCustomerActionMenu(customer);
-	}
+//	private static void showTransferMenu(Customer customer) {
+//		System.out.println("Here Is A List Of Your Account: ");
+//		showAllAccountForCustomer(customer);
+//		System.out.println("<----------------------------------------------------->");
+//		System.out.println("Reminder: You can only transfer between your own account!");
+//		System.out.println("Please Enter An Account Number To Transfer From: ");
+//		String accNumTransferFrom = getInput();
+//		System.out.println("Please Enter An AccountNumber To Transfer To: ");
+//		String accNumTransferTo = getInput();
+//		System.out.println("Please Enter The Amount To Transfer: ");
+//		String amountToTransfer = getInput();
+//		System.out.println("Please wait a minute!");
+//		System.out.println("Still being implemented");
+//		showCustomerActionMenu(customer);
+//	}
 
 	private static Set<Account> getAllAccountForCustomer(Customer customer) {
 		// TODO implement this
