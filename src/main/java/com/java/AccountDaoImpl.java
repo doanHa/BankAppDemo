@@ -1,7 +1,11 @@
 package com.java;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 
@@ -125,7 +129,7 @@ public class AccountDaoImpl implements AccountDao {
     public boolean updateAccountBalance(Account account) {
         boolean entryAdded = false;
         try {
-            PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET BALANCE =? WHERE ACNT_NUMBER=?");
+            PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET BALANCE =? WHERE ACNT_NUMBER=?;");
             stmt.setDouble(1, account.getBalances());
             stmt.setInt(2, account.getAccountNumber());
 
@@ -294,18 +298,27 @@ public class AccountDaoImpl implements AccountDao {
     private int insertCustomerAccount2(int cust_id, int acnt_number) {
         int rowsAdded = 0;
         try {
-            PreparedStatement stmtCustomerAccount = con.prepareStatement("INSERT INTO CUSTOMERACCOUNT (CUST_ID, " +
+            Properties properties = new Properties();
+            properties.load(new FileReader("src/main/resources/database.properties"));
+            Class.forName(properties.getProperty("driver"));
+            Connection conn = DriverManager.getConnection(properties.getProperty("url"), properties.getProperty(
+                    "username"), properties.getProperty("password"));
+
+            PreparedStatement stmtCustomerAccount = conn.prepareStatement("INSERT INTO CUSTOMERACCOUNT (CUST_ID, " +
                     "ACNT_NUMBER) VALUES (?, ?)");
 
             stmtCustomerAccount.setInt(1, cust_id);
             stmtCustomerAccount.setInt(2, acnt_number);
 
             rowsAdded = stmtCustomerAccount.executeUpdate();
-            con.commit();
+            conn.commit();
+            conn.close();
 
         } catch (SQLException e) {
-            System.out.println("Unable to connect please try again later3.");
-        } finally {
+            //System.out.println("Unable to connect please try again later3.");
+        } catch (Exception e) {
+            System.out.println("file MIA");
+        }  finally {
             {
                 if(con != null) try {
                     con.close();
