@@ -1,11 +1,16 @@
 package com.java;
 
+import org.apache.log4j.Logger;
+
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 public class CustomerUI extends UserUI {
 	private static CustomerDaoImpl customerConnection;
+	static Logger logger = Logger.getLogger(Bank.class.getName());
+	static Date date = new Date();
 
 	public CustomerUI(String input) {
 		switch (input) {
@@ -32,20 +37,20 @@ public class CustomerUI extends UserUI {
 		System.out.println("Please enter your email address");
 		String emailInput = getInput();
 		System.out.println("Please wait for your account to be registered");
-		// TODO insert an account into the table with above information.
-		// TODO then, display a message saying their account has been registered
-		// TODO afterward, take them to the main menu and ask for input
 		customerConnection = new CustomerDaoImpl();
-		Customer temp = new Customer();
-		temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
-		temp = temp.register(firstNameInput, lastNameInput, usernameInput, passwordInput, emailInput);
+		Customer temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
+		if(temp == null) {
+			temp = new Customer();
+			temp = temp.register(firstNameInput, lastNameInput, usernameInput, passwordInput, emailInput);
+			logger.info("Customer account created for " + firstNameInput + " " + lastNameInput + " " + date);
+		}
 		if (customerConnection.insertCustomer(temp)) {
 			System.out.println(
 					"Your account has been registered.\nYou can log into your account by using you username and password.");
 		} else {
 			System.out.println("Your account could not be registered at this time, please try again later");
 		}
-		// TODO add to log file
+		logger.info("Customer account could not be created for " + firstNameInput + " " + lastNameInput + " " + date);
 		UserUI.showMainMenu();
 	}
 
@@ -60,10 +65,10 @@ public class CustomerUI extends UserUI {
 		customerConnection = new CustomerDaoImpl();
 		Customer temp = customerConnection.getCustomerByLoginAndPassword(usernameInput, passwordInput);
 		if (temp == null) {
-			System.out.println("Incorrect input\n\n"); // TODO add to log file
+			System.out.println("Incorrect input\n\n");
 			UserUI.showMainMenu();
 		} else {
-			// TODO add to log file
+			logger.info("Customer login sucessful for " + usernameInput);
 			showCustomerActionMenu(temp);
 		}
 

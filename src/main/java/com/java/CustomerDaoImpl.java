@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public class CustomerDaoImpl implements CustomerDao {
 	private Connection con;
-
 	@Override
 	public boolean getCustomerByLogin(String login) {
 		boolean validLogin = false;

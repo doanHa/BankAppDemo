@@ -1,16 +1,19 @@
 package com.java;
 
+import org.apache.log4j.Logger;
+
+import java.util.Date;
 
 
 public class Bank {
-	// HACK: Need to make sure we handles the NullPointerExceptions from passing
-	// values for records that do not exist
-	// (i.e user passing in wrong log in info, same with employer)
+
+	static Logger logger = Logger.getLogger(Bank.class.getName());
+
 	public static void main(String[] args) {
+		Date date = new Date();
+
+		logger.info("Bank Accessed on " + date);
 		UserUI.showMainMenu();
+
 	}
-	/*
-	 * static Logger logger= Logger.getLogger(Demo1.class);
-	 * logger.info()/debug()/error()/fatal();
-	 */
 }
