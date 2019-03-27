@@ -272,19 +272,8 @@ public class CustomerUI extends UserUI {
 
 	private static Set<Account> getAllAccountForCustomer(Customer customer) {
 		// TODO implement this
-		Set<Account> test = new HashSet<Account>();
-		for (int i = 0; i < 5; i++) {
-			Account temp = new CheckingAccount();
-			temp.setAccountNumber(i);
-			temp.setBalances(10000 * i + 100);
-			test.add(temp);
-		}
-		for (int i = 6; i < 10; i++) {
-			Account temp = new SavingAccount();
-			temp.setAccountNumber(i);
-			temp.setBalances(10000 * i + 100);
-			test.add(temp);
-		}
+		AccountDaoImpl accountConnection = new AccountDaoImpl();
+		Set<Account> test = accountConnection.getAccountsByCustomerID(customer.getCustomerID());
 		return test;
 	}
 
