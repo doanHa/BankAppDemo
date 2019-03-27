@@ -47,9 +47,10 @@ public class EmployeeUI extends UserUI {
 				showApproveDenyMenu(employee);
 				break;
 			case "2":
-				showCustomersAccountsInfo();
+				showCustomersAccountsInfo(employee);
 				break;
 			case "3":
+				showCustomerAccountBalances(employee);
 				break;
 			case "4":
 				break;
@@ -61,10 +62,26 @@ public class EmployeeUI extends UserUI {
 		} while (!validInput);
 	}
 
-	private static void showCustomersAccountsInfo() {
+	private static void showCustomerAccountBalances(Employee emp) {
 		AccountDaoImpl accountConn = new AccountDaoImpl();
 		Set<Account> accounts = accountConn.getAllBankAccounts();
 		Iterator<Account> accountsIterator = accounts.iterator();
+		System.out.println("The Account Balances are As Followed: ");
+		while (accountsIterator.hasNext()) {
+			Account account = accountsIterator.next();
+			System.out.println("|Account Number       |" + account.getAccountNumber());
+			System.out.println("|Account Balances     |" + account.getBalances());
+			System.out.println("----------------------");
+		}
+		showEmployeeActionMenu(emp);
+		
+	}
+
+	private static void showCustomersAccountsInfo(Employee emp) {
+		AccountDaoImpl accountConn = new AccountDaoImpl();
+		Set<Account> accounts = accountConn.getAllBankAccounts();
+		Iterator<Account> accountsIterator = accounts.iterator();
+		System.out.println("The Accounts Information are as followed");
 		while(accountsIterator.hasNext()) {
 			Account account = accountsIterator.next();
 			System.out.println("|Account Number       |" + account.getAccountNumber());
@@ -74,8 +91,9 @@ public class EmployeeUI extends UserUI {
 			if (account instanceof SavingAccount)
 				System.out.println("|Annual Interest Rate |" + ((SavingAccount) account).getAnnualInterestRate());
 			System.out.println("|Account Status       |" + account.getAccountStatus());
-			System.out.println("----------------------");
+			System.out.println("--------------------------");
 		}
+		showEmployeeActionMenu(emp);
 	}
 
 	private static void showApproveDenyMenu(Employee emp) {
@@ -89,6 +107,7 @@ public class EmployeeUI extends UserUI {
 			System.out.println("| Account Number    |" + temp.getAccountNumber());
 			System.out.println("| Routing Number    |" + temp.getRoutingNumber());
 			System.out.println("| Account Type      |" + temp.getAccountType());
+			System.out.println("----------------------------------------");
 		}
 		changeAccountStatus(emp, pendingAccount);
 	}

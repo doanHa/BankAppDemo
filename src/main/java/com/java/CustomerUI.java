@@ -84,8 +84,8 @@ public class CustomerUI extends UserUI {
 		System.out.println("4. Show Personal Infomation");
 		System.out.println("5. Deposit Money to an Account");
 		System.out.println("6. Withdraw Money to an Account");
-		System.out.println("7. Transfer Money to you Other Account");
-		System.out.println("8. Log Out");
+//		System.out.println("7. Transfer Money to you Other Account");
+		System.out.println("7. Log Out");
 		takeCustomerActionInput(customer);
 	}
 
@@ -120,14 +120,14 @@ public class CustomerUI extends UserUI {
 				showWithdrawMenu(customer);
 				validInput = true;
 				break;
+//			case "7":
+//				showTransferMenu(customer);
+//				validInput = true;
+//				break;
 			case "7":
-				showTransferMenu(customer);
-				validInput = true;
-				break;
-			case "8":
 				showMainMenu();
 			default:
-				System.out.println("Please enter a valid option (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8)");
+				System.out.println("Please enter a valid option (1 | 2 | 3 | 4 | 5 | 6 | 7)");
 			}
 		} while (!validInput);
 	}
@@ -280,22 +280,20 @@ public class CustomerUI extends UserUI {
 		System.out.println("<----------------------------------------------------->");
 		System.out.println("Reminder: You can only withdraw from your own account!");
 		System.out.println("Please enter an accoun number to withdraw: ");
-		String accNumWithdraw = getInput();
-		System.out.println("Please enter the amount you want to withdraw: ");
-		String amountToWithdraw = getInput();
-		System.out.println("Please wait a minute!");
+		int accNumberWithdraw = 0;
 		AccountDaoImpl accountConnection = new AccountDaoImpl();
 		boolean validInput = false;
-		int accNumberWithdraw = 0;
 		do {
 			try {
-				accNumberWithdraw = Integer.parseInt(accNumWithdraw);
+				System.out.println("Please enter an account number to deposit: ");
+				accNumberWithdraw = Integer.parseInt(getInput());
+				validInput = true;
 			} catch (NumberFormatException numFEx) {
 				System.out.println("Invalid account number");
 			}
 		} while (!validInput);
-
 		Account temp = accountConnection.getAccountByAccountNumber(accNumberWithdraw);
+
 		if (temp == null) {
 			System.out.println("Could Not Get Account Information.");
 			showCustomerActionMenu(customer);
@@ -309,42 +307,41 @@ public class CustomerUI extends UserUI {
 			System.out.println("Your Account Was Closed");
 		else {
 			validInput = false;
-			double amountToDeposit = 0;
+			double amountToWithdraw = 0;
 			do {
 				try {
 					System.out.println("Please enter the amount you want to deposit: ");
-					amountToDeposit = Double.parseDouble(getInput());
+					amountToWithdraw = Double.parseDouble(getInput());
 					validInput = true;
 				} catch (NumberFormatException numFEx) {
 					System.out.println("Invalid input. Please only put in numbers");
 				}
 			} while (!validInput);
 
-			temp.deposit(amountToDeposit);
+			temp.withdraw(amountToWithdraw);
 
 			if (accountConnection.updateAccountBalance(temp)) {
 				System.out.println("All Done!");
 			}
 		}
 		showCustomerActionMenu(customer);
-		showCustomerActionMenu(customer);
 	}
 
-	private static void showTransferMenu(Customer customer) {
-		System.out.println("Here Is A List Of Your Account: ");
-		showAllAccountForCustomer(customer);
-		System.out.println("<----------------------------------------------------->");
-		System.out.println("Reminder: You can only transfer between your own account!");
-		System.out.println("Please Enter An Account Number To Transfer From: ");
-		String accNumTransferFrom = getInput();
-		System.out.println("Please Enter An AccountNumber To Transfer To: ");
-		String accNumTransferTo = getInput();
-		System.out.println("Please Enter The Ammount To Transfer: ");
-		String amountToTransfer = getInput();
-		System.out.println("Please wait a minute!");
-		System.out.println("All Done!");
-		showCustomerActionMenu(customer);
-	}
+//	private static void showTransferMenu(Customer customer) {
+//		System.out.println("Here Is A List Of Your Account: ");
+//		showAllAccountForCustomer(customer);
+//		System.out.println("<----------------------------------------------------->");
+//		System.out.println("Reminder: You can only transfer between your own account!");
+//		System.out.println("Please Enter An Account Number To Transfer From: ");
+//		String accNumTransferFrom = getInput();
+//		System.out.println("Please Enter An AccountNumber To Transfer To: ");
+//		String accNumTransferTo = getInput();
+//		System.out.println("Please Enter The Amount To Transfer: ");
+//		String amountToTransfer = getInput();
+//		System.out.println("Please wait a minute!");
+//		System.out.println("Still being implemented");
+//		showCustomerActionMenu(customer);
+//	}
 
 	private static Set<Account> getAllAccountForCustomer(Customer customer) {
 		// TODO implement this
