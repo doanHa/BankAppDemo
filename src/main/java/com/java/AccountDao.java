@@ -7,6 +7,7 @@ public interface AccountDao {
    Account getAccountByAccountNumber(int accountNumber);
    Set getAccountsByCustomerID(int cust_id);
    Set getAllBankAccounts();
+   Set getPendingAccounts();
    boolean updateAccountStatus(Account account);
    boolean updateAccountBalance(Account account);
    boolean updateAccountLimit(Account account);
