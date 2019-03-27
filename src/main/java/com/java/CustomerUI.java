@@ -127,15 +127,9 @@ public class CustomerUI extends UserUI {
 	private static void applyForAccount(Customer customer) {
 		// TODO Implement this
 		int[] routingNumber = new int[3];
-<<<<<<< HEAD
-		routingNumber[0] = 1001009;
-		routingNumber[1] = 1002008;
-		routingNumber[2] = 1005001;
-=======
 		routingNumber[0] = 1001000;
 		routingNumber[1] = 1002007;
 		routingNumber[2] = 1005000;
->>>>>>> 9a40289ae40dedaac6df1ad8cc65370476c58de3
 		int accountRoutingNumber = (int) (Math.random() * 3);
 		System.out.println("Please Answer The Following Questions");
 		System.out.println("Would you like to create a checking or saving account? (Checking/Saving)");
