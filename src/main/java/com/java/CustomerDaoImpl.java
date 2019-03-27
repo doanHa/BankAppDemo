@@ -115,20 +115,19 @@ public class CustomerDaoImpl implements CustomerDao {
 	}
 
 	@Override
-	public Set getAllCustomers() {
+	public Set<Customer> getAllCustomers() {
+		Set<Customer> customers = new HashSet<>();
 
 		try {
 			PreparedStatement stmt = con.prepareStatement("SELECT * FROM Customer");
 			ResultSet rs = stmt.executeQuery();
-			Set<Customer> customers = new HashSet<>();
+
 
 			while (rs.next()) {
 				Customer customer = extractCustomerFromResultSet(rs);
 				customers.add(customer);
 
 			}
-
-			return customers;
 		} catch (SQLException e) {
 			System.out.println("Unable to connect please try again later.");
 		} finally {
@@ -139,7 +138,7 @@ public class CustomerDaoImpl implements CustomerDao {
 					/* ignored */}
 		}
 
-		return null;
+		return customers;
 
 	}
 
