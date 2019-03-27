@@ -127,9 +127,9 @@ public class CustomerUI extends UserUI {
 	private static void applyForAccount(Customer customer) {
 		// TODO Implement this
 		int[] routingNumber = new int[3];
-		routingNumber[0] = 10010009;
-		routingNumber[1] = 10020078;
-		routingNumber[2] = 10050001;
+		routingNumber[0] = 1001009;
+		routingNumber[1] = 1002008;
+		routingNumber[2] = 1005001;
 		int accountRoutingNumber = (int) (Math.random() * 3);
 		System.out.println("Please Answer The Following Questions");
 		System.out.println("Would you like to create a checking or saving account? (Checking/Saving)");
@@ -232,6 +232,8 @@ public class CustomerUI extends UserUI {
 		Account temp = accountConnection.getAccountByAccountNumber(accNumberDeposit);
 		if (temp == null) {
 			System.out.println("Could Not Get Account Information.");
+			showCustomerActionMenu(customer);
+			return;
 		}
 		System.out.println("Please enter the amount you want to deposit: ");
 		validInput = false;
