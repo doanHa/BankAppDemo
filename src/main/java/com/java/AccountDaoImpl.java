@@ -1,20 +1,19 @@
 package com.java;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+
+
 import java.sql.*;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 
 
+@SuppressWarnings("Duplicates")
 public class AccountDaoImpl implements AccountDao {
-    Connection con = DBUtil.getInstance();
-
+    private Connection con;
 
     @Override
     public Account getAccountByAccountNumber(int accountNumber) {
+        con = DBUtil.getInstance();
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM ACCOUNT WHERE ACNT_NUMBER =" + accountNumber);
             ResultSet rs = stmt.executeQuery();
@@ -35,6 +34,7 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public Set<Account> getAccountsByCustomerID(int cust_id) {
         Set<Account> accounts = new HashSet<>();
+        con = DBUtil.getInstance();
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT A1.* FROM ACCOUNT A1 JOIN CUSTOMERACCOUNT C2 on A1" +
                     ".ACNT_NUMBER = C2" +
@@ -60,6 +60,7 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public Set<Account> getAllBankAccounts() {
         Set<Account> accounts = new HashSet<>();
+        con = DBUtil.getInstance();
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM ACCOUNT");
             ResultSet rs = stmt.executeQuery();
@@ -80,6 +81,7 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public Set<Account> getPendingAccounts() {
         Set<Account> accounts = new HashSet<>();
+        con = DBUtil.getInstance();
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM ACCOUNT WHERE ACNT_STATUS = 'P'");
             ResultSet rs = stmt.executeQuery();
@@ -100,6 +102,7 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public boolean updateAccountStatus(Account account) {
         boolean entryAdded = false;
+        con = DBUtil.getInstance();
         try {
             PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET ACNT_STATUS=? WHERE ACNT_NUMBER=?");
             stmt.setString(1, String.valueOf(account.getAccountStatus()));
@@ -128,12 +131,10 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public boolean updateAccountBalance(Account account) {
         boolean entryAdded = false;
+        con = DBUtil.getInstance();
         try {
-        	System.out.println("________________________---1");
             PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET BALANCE =? WHERE ACNT_NUMBER=?");
-            System.out.println("________________________---2");
             stmt.setDouble(1, account.getBalances());
-            System.out.println("________________________---3");
             stmt.setInt(2, account.getAccountNumber());
             int rowsAdded = stmt.executeUpdate();
             con.commit();
@@ -157,6 +158,7 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public boolean updateAccountLimit(Account account) {
         boolean entryAdded = false;
+        con = DBUtil.getInstance();
         try {
             PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET ACNT_LIMIT=? WHERE ACNT_NUMBER=?");
             stmt.setDouble(1, account.getAccountLimit());
@@ -184,6 +186,7 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public boolean updateAccountAnnualInterestRate(SavingAccount account) {
         boolean entryAdded = false;
+        con = DBUtil.getInstance();
         try {
             PreparedStatement stmt = con.prepareStatement("UPDATE ACCOUNT SET AN_INT_RATE=? WHERE ACNT_NUMBER=?");
             stmt.setInt(1, (int)account.getAnnualInterestRate());
@@ -214,6 +217,7 @@ public class AccountDaoImpl implements AccountDao {
         boolean entryAdded = false;
         int row1Added = 0;
         int row2Added = 0;
+        con = DBUtil.getInstance();
         try {
             CallableStatement cstmt = con.prepareCall("{CALL INSERT_ACCOUNT(?, ?, ?, ?)}");
             cstmt.registerOutParameter(1, Types.INTEGER);
@@ -230,7 +234,7 @@ public class AccountDaoImpl implements AccountDao {
                 }
             } else {
                 row1Added = insertCustomerAccount(customer.getCustomerID(), acnt_number);
-                row2Added = insertCustomerAccount2(jointCust_id, acnt_number);
+                row2Added = insertCustomerAccount(jointCust_id, acnt_number);
                 if ((row1Added + row2Added) == 2) {
                     entryAdded = true;
                 }
@@ -276,6 +280,7 @@ public class AccountDaoImpl implements AccountDao {
 
     private int insertCustomerAccount(int cust_id, int acnt_number) {
         int rowsAdded = 0;
+        con = DBUtil.getInstance();
         try {
             PreparedStatement stmtCustomerAccount = con.prepareStatement("INSERT INTO CUSTOMERACCOUNT (CUST_ID, " +
                     "ACNT_NUMBER) VALUES (?, ?)");
@@ -289,38 +294,6 @@ public class AccountDaoImpl implements AccountDao {
         } catch (SQLException e) {
             System.out.println("Unable to connect please try again later2.");
         } finally {
-            {
-                if(con != null) try {
-                    con.close();
-                } catch (SQLException e) {/*ignored*/}
-            }
-        }
-        return rowsAdded;
-    }
-    private int insertCustomerAccount2(int cust_id, int acnt_number) {
-        int rowsAdded = 0;
-        try {
-            Properties properties = new Properties();
-            properties.load(new FileReader("src/main/resources/database.properties"));
-            Class.forName(properties.getProperty("driver"));
-            Connection conn = DriverManager.getConnection(properties.getProperty("url"), properties.getProperty(
-                    "username"), properties.getProperty("password"));
-
-            PreparedStatement stmtCustomerAccount = conn.prepareStatement("INSERT INTO CUSTOMERACCOUNT (CUST_ID, " +
-                    "ACNT_NUMBER) VALUES (?, ?)");
-
-            stmtCustomerAccount.setInt(1, cust_id);
-            stmtCustomerAccount.setInt(2, acnt_number);
-
-            rowsAdded = stmtCustomerAccount.executeUpdate();
-            conn.commit();
-            conn.close();
-
-        } catch (SQLException e) {
-            //System.out.println("Unable to connect please try again later3.");
-        } catch (Exception e) {
-            System.out.println("file MIA");
-        }  finally {
             {
                 if(con != null) try {
                     con.close();
