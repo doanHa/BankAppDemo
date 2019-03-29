@@ -72,48 +72,47 @@
 //		testAccount.withdraw(200.0);
 //		assertEquals(0.0, testAccount.showBalances(), 0.0);
 //	}
-//	@Test
-//	public void testTransferWithinBalancesAndNotExcessTransferLimit() {
-//		Account temp = new CheckingAccount(575, new Customer());
-//		temp.setLimit();
-//		testAccount.deposit(10000000.0);
-//		testAccount.transfer(10000.0, temp);
-//		if(testAccount.showBalances() == 9990000.0 && temp.showBalances() == 10000.0)
-//			assert(true);
-//		else 
-//			assert(false);
-//	}
-//	@Test
-//	public void testTransferWithinBalancesButExcessTransferLimit() {
-//		Account temp = new CheckingAccount(575, new Customer());
-//		temp.setLimit();
-//		testAccount.deposit(1000000002.0);
-//		testAccount.transfer(1000000001.0, temp);
-//		if(testAccount.showBalances() == 1000000002.0 && temp.showBalances() == 0.0)
-//			assert(true);
-//		else 
-//			assert(false);
-//	}
-//	@Test
-//	public void testTransferNegativeAmount() {
-//		Account temp = new CheckingAccount(575, new Customer());
-//		temp.setLimit();
-//		testAccount.deposit(1000000002.0);
-//		testAccount.transfer(-100.0, temp);
-//		if(testAccount.showBalances() == 1000000002.0 && temp.showBalances() == 0.0)
-//			assert(true);
-//		else 
-//			assert(false);
-//	}
-//	@Test
-//	public void testTransferExcessBalances() {
-//		Account temp = new CheckingAccount(575, new Customer());
-//		temp.setLimit();
-//		testAccount.deposit(100000000.0);
-//		testAccount.transfer(1000000000.0, temp);
-//		if(testAccount.showBalances() == 100000000.0 && temp.showBalances() == 0.0)
-//			assert(true);
-//		else 
-//			assert(false);
-//	}
+////	@Test
+////	public void testTransferWithinBalancesAndNotExcessTransferLimit() {
+////		Account temp = new CheckingAccount(575, new Customer());
+////		temp.setLimit();
+////		testAccount.deposit(10000000.0);
+////		testAccount.transfer(10000.0, temp);
+////		if(testAccount.showBalances() == 9990000.0 && temp.showBalances() == 10000.0)
+////			assert(true);
+////		else 
+////			assert(false);
+////	}
+////	@Test
+////	public void testTransferWithinBalancesButExcessTransferLimit() {
+////		Account temp = new CheckingAccount(575, new Customer());
+////		temp.setLimit();
+////		testAccount.deposit(1000000002.0);
+////		testAccount.transfer(1000000001.0, temp);
+////		if(testAccount.showBalances() == 1000000002.0 && temp.showBalances() == 0.0)
+////			assert(true);
+////		else 
+////			assert(false);
+////	}
+////	@Test
+////	public void testTransferNegativeAmount() {
+////		Account temp = new CheckingAccount(575, new Customer());
+////		temp.setLimit();
+////		testAccount.deposit(1000000002.0);
+////		testAccount.transfer(-100.0, temp);
+////		if(testAccount.showBalances() == 1000000002.0 && temp.showBalances() == 0.0)
+////			assert(true);
+////		else 
+////			assert(false);
+////	}
+////	@Test
+////	public void testTransferExcessBalances() {
+////		Account temp = new CheckingAccount();
+////		testAccount.deposit(100000000.0);
+////		testAccount.transfer(1000000000.0, temp);
+////		if(testAccount.showBalances() == 100000000.0 && temp.showBalances() == 0.0)
+////			assert(true);
+////		else 
+////			assert(false);
+////	}
 //}
